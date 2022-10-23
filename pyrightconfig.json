@@ -1,0 +1,29 @@
+{
+  "include": [
+    "src"
+  ],
+  
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__"
+  ],
+
+  "ignore": [],
+
+  "defineConstant": {
+    "DEBUG": true
+  },
+
+  "venvPath": ".",
+  "venv": ".venv",
+
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+
+  "pythonVersion": "3.9",
+  "pythonPlatform": "All",
+
+  "typeCheckingMode": "strict",
+  "useLibraryCodeForTypes": true,
+  "src_url": "github.com/microsoft/pyright/blob/main/docs/configuration.md"
+}
