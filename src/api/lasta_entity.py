@@ -5,35 +5,41 @@ https://github.com/Lastaapps/menza-backend
 
 from typing import Any
 
-class Status:
+
+class DataClass:
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return repr(self.__dict__)
+
+
+class Status(DataClass):
     """Current global rating status"""
 
     def __init__(self, data: dict[str, Any]):
-        self.id = int(data["id"])
+        self.id = str(data["id"])
         self.rate_count = int(data["rateCount"])
         self.rating = float(data["rating"])
         self.soldOutCount = int(data["soldOutCount"])
 
-class Rate:
+
+class Rate(DataClass):
     """Rate payload"""
 
     def __init__(self, id: str, rating: int):
         self.id = id
         self.rating = rating
 
-class Soldout:
+
+class Soldout(DataClass):
     """Soldout payload"""
 
     def __init__(self, id: str):
         self.id = id
-#{
-#    "ratings": 1,
-#    "average": 1.0,
-#    "sold_out": 0,
-#    "state_requests": 3,
-#    "statistics_requests": 1
-#}
-class Statistics:
+
+
+class Statistics(DataClass):
     """Today rating statistics"""
 
     def __init__(self, data: dict[str, Any]):
@@ -42,4 +48,3 @@ class Statistics:
         self.sold_out = int(data["sold_out"])
         self.state_count = int(data["state_requests"])
         self.statistics_count = int(data["statistics_requests"])
-
