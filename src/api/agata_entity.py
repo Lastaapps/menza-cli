@@ -18,11 +18,11 @@ class DishList(DataClass):
     """TJidelnicek entity"""
 
     def __init__(self, resp: dict[str, Any]):
-        self.id: int = int(resp["id"])
-        self.name: str = resp["nazev"]
-        self.description: str = resp["popis"]
-        self.systems: list[str] = str(resp["podsystemy"]).split(";")
-        self.price: str = resp["cena"]
+        self.id = int(resp["id"])
+        self.name = str(resp["nazev"])
+        self.description = str(resp["popis"])
+        self.systems = [int(x) for x in str(resp["podsystemy"]).split(";")]
+        self.price = str(resp["cena"])
 
 
 class Subsystem(DataClass):
@@ -30,8 +30,8 @@ class Subsystem(DataClass):
 
     def __init__(self, resp: dict[str, Any]):
         self.id = int(resp["id"])
-        self.description: str = resp["popis"]
-        self.open: bool = int(resp["otevreno"]) == 1
+        self.description = str(resp["popis"])
+        self.open = int(resp["otevreno"]) == 1
 
 
 class ServingPlace(DataClass):
@@ -80,11 +80,11 @@ class Info(DataClass):
     """TInfo entity"""
 
     def __init__(self, data: dict[str, Any]):
-        self.id = int(data["id"])
+        self.id = int(data["id"] or -1)
         self.subsystem_id = int(data["podsystem_id"])
         self.subsystem_web = str(data["podsystem_web"])
-        self.header = str(data["text_nahore"])
-        self.footer = str(data["text_dole"])
+        self.header = str(data["text_nahore"]).replace("<BR>", "\n").strip()
+        self.footer = str(data["text_dole"]).replace("<BR>", "\n").strip()
 
 
 class OpenTime(DataClass):
@@ -110,7 +110,7 @@ class Contact(DataClass):
 
     def __init__(self, data: dict[str, Any]):
         self.id = int(data["id"])
-        self.subsystem_id = str("podsystem_id")
+        self.subsystem_id = int(data["podsystem_id"])
         self.gps = str(data["maps"])
         self.order = int(data["poradi"] or 0)
         self.role = str(data["pozice"])
