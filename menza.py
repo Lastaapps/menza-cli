@@ -1,9 +1,9 @@
 #!/bin/python
 
-from src.api import endpoints as e
+from src.api import agata_api as a
 import sys
 
 print(sys.path)
 
-print(str(e.get_dish_list()))
+print(str(a.get_dish_list()))
 

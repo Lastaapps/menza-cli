@@ -1,6 +1,6 @@
 from typing import Optional, Any
 import requests
-from src.api.entity import *
+from src.api.agata_entity import *
 
 # TODO move into config
 api_key :str = "v1XiWjvD"
