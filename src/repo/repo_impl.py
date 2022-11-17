@@ -1,4 +1,5 @@
 import ascii_magic
+from result import Result, as_result
 
 from src.api.agata_api import AgataApi
 from src.api.agata_api_impl import AgataApiImpl
@@ -14,11 +15,13 @@ class RepoImpl(Repo):
     def __init__(self, agata_api: AgataApi = AgataApiImpl()):
         self.agata_api = agata_api
 
+    @as_result(Exception)
     def get_menza_list(self) -> list[Subsystem]:
         """Gets list of all the CTU menzas"""
 
         return sorted(self.agata_api.get_sub_systems(), key=lambda s: s.description)
 
+    @as_result(Exception)
     def get_dish_list(self, system: Subsystem) -> dict[str, list[Dish]]:
         """Get today dish menu in a menza"""
 
@@ -43,6 +46,7 @@ class RepoImpl(Repo):
             out[time.subsytem_id] = group
         return out
 
+    @as_result(Exception)
     def get_complete_info(self, subsystem_id: int) -> CompleteInfo:
         """Combines all the info about a menza"""
 
@@ -69,6 +73,7 @@ class RepoImpl(Repo):
 
         return CompleteInfo(info, times, contacts, addresses)
 
+    @as_result(Exception)
     def get_image(self, dish: Dish) -> ascii_magic.AsciiArt:
         """Gets image in ascii_art format"""
 

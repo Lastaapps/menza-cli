@@ -14,7 +14,6 @@
     "DEBUG": true
   },
 
-  "venvPath": ".",
   "venv": ".venv",
 
   "reportMissingImports": true,
@@ -30,5 +29,6 @@
 
   "typeCheckingMode": "strict",
   "useLibraryCodeForTypes": true,
-  "src_url": "github.com/microsoft/pyright/blob/main/docs/configuration.md"
+
+  "src_url": "https://github.com/microsoft/pyright/blob/main/docs/configuration.md"
 }
