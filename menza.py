@@ -5,7 +5,7 @@
 # from src.api import lasta_api as l
 # from src.repo import repo
 # import ascii_magic
-import src.gui.main as gui
+from src.gui.main import Main
 import sys
 
 print(sys.path)
@@ -17,9 +17,7 @@ print(sys.path)
 
 #ascii_magic.to_terminal(repo.get_image(dish_list["Minutka"][0]))
 
-
-
-gui.start_app()
+Main().start_app()
 
 
 

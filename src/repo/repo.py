@@ -1,6 +1,8 @@
+from abc import ABCMeta, abstractmethod
 import ascii_magic
 
-import src.api.agata_api as agata
+from src.api.agata_api import AgataApi
+from src.api.agata_api_impl import AgataApiImpl
 import src.api.lasta_api as lasta
 from src.api.agata_entity import Info, OpenTime, Contact, Address
 from src.api.agata_entity import Subsystem, Dish
@@ -24,51 +26,26 @@ class CompleteInfo:
         self.addresses = addresses
 
 
-def get_menza_list() -> list[Subsystem]:
-    return sorted(agata.get_sub_systems(), key=lambda s: s.description)
+class Repo(metaclass=ABCMeta):
+    def __init__(self, agata_api: AgataApi = AgataApiImpl()):
+        self.agata_api = agata_api
 
+    @abstractmethod
+    def get_menza_list(self) -> list[Subsystem]:
+        """Gets list of all the CTU menzas"""
+        pass
 
-def get_dish_list(system: Subsystem) -> dict[str, list[Dish]]:
-    types = sorted(agata.get_dish_types(system.id), key=lambda s: s.order)
-    dishes = agata.get_dishes(system.id)
-    out: dict[str, list[Dish]] = {}
-    for t in types:
-        out[t.name] = list(filter(lambda dish: dish.type == t.id, dishes))
-    return out
+    @abstractmethod
+    def get_dish_list(self, system: Subsystem) -> dict[str, list[Dish]]:
+        """Get today dish menu in a menza"""
+        pass
 
+    @abstractmethod
+    def get_complete_info(self, subsystem_id: int) -> CompleteInfo:
+        """Combines all the info about a menza"""
+        pass
 
-def group_times(times: list[OpenTime]) -> TimeGroup:
-    out: TimeGroup = {}
-
-    for time in times:
-        group = out.get(time.subsytem_id, {})
-        target = group.get(time.serving_id, [])
-        target.append(time)
-        group[time.serving_id] = target
-        out[time.subsytem_id] = group
-    return out
-
-
-def get_complete_info(subsystem_id: int) -> CompleteInfo:
-    info = list(
-        filter(lambda x: x.subsystem_id == subsystem_id, agata.get_info(subsystem_id))
-    )[0]
-
-    all_times = agata.get_open_times(subsystem_id)
-    times = group_times(all_times).get(subsystem_id, {})
-
-    contacts = list(
-        filter(lambda x: x.subsystem_id == subsystem_id, agata.get_contact())
-    )
-    addresses = list(
-        filter(lambda x: x.subsystem_id == subsystem_id, agata.get_address())
-    )
-
-    return CompleteInfo(info, times, contacts, addresses)
-
-
-def get_image(dish: Dish) -> ascii_magic.AsciiArt:
-    print(agata.get_image_url(dish.subsystem_id, dish.photo))
-    return ascii_magic.from_url(
-        agata.get_image_url(dish.subsystem_id, dish.photo), columns=200, char="❚"
-    )
+    @abstractmethod
+    def get_image(self, dish: Dish) -> ascii_magic.AsciiArt:
+        """Gets image in ascii_art format"""
+        pass
