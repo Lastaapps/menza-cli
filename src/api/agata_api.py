@@ -1,10 +1,10 @@
 from typing import Optional, Any
 import requests
-from src.api.agata_entity import *
+from .agata_entity import *
 
 # TODO move into config
 api_key: str = "v1XiWjvD"
-base_url: str = "https://agata-new.suz.cvut.cz"
+base_url: str = "https://agata.suz.cvut.cz"
 api_url: str = base_url + "/jidelnicky/JAPI/json_API.php"
 
 

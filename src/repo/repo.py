@@ -1,7 +1,8 @@
+import ascii_magic
+
 import src.api.agata_api as agata
 import src.api.lasta_api as lasta
 from src.api.agata_entity import Info, OpenTime, Contact, Address
-import ascii_magic
 from src.api.agata_entity import Subsystem, Dish
 
 TimeServingGroup = dict[int, list[OpenTime]]

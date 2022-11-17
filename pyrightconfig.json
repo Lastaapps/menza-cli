@@ -19,6 +19,11 @@
 
   "reportMissingImports": true,
   "reportMissingTypeStubs": false,
+  "reportUnknownParameterType": false,
+  "reportUnknownArgumentType": false,
+  "reportUnknownLambdaType": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownMemberType": false,
 
   "pythonVersion": "3.10",
   "pythonPlatform": "All",

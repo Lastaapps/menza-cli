@@ -1,9 +1,10 @@
-#!/bin/python
+#!python3
+# /bin/ is omitted because venv is expected
 
 # from src.api import agata_api as a
 # from src.api import lasta_api as l
-from src.repo import repo
-import ascii_magic
+# from src.repo import repo
+# import ascii_magic
 import src.gui.main as gui
 import sys
 
@@ -15,6 +16,8 @@ print(sys.path)
 #print(dish_list)
 
 #ascii_magic.to_terminal(repo.get_image(dish_list["Minutka"][0]))
+
+
 
 gui.start_app()
 
@@ -31,7 +34,7 @@ gui.start_app()
 # print(str(a.get_address()))
 # print(str(a.get_week_info(1)))
 # print(str(a.get_day_dish(a.get_week_info(1)[0].id)))
-# 
+#
 # print(str(l.post_rating(l.dish_id("", ""), 4)))
 # print(str(l.post_sold_out(l.dish_id("", ""))))
 # print(str(l.get_status()))

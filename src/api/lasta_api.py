@@ -1,6 +1,6 @@
 from typing import Any
 import requests
-from src.api.lasta_entity import *
+from .lasta_entity import *
 from cryptography.hazmat.primitives import hashes
 import base64
 
