@@ -1,16 +1,13 @@
 from abc import ABCMeta, abstractmethod
 from result import Result
-import ascii_magic
+from typing import Callable
 
-from src.api.agata_api import AgataApi
-from src.api.agata_api_impl import AgataApiImpl
-import src.api.lasta_api as lasta
 from src.api.agata_entity import Info, OpenTime, Contact, Address
 from src.api.agata_entity import Subsystem, Dish
 
 TimeServingGroup = dict[int, list[OpenTime]]
 TimeGroup = dict[int, TimeServingGroup]
-
+DishRatingMapper = Callable[[Subsystem, Dish], tuple[float, int]] # (rating, rating count)
 
 class CompleteInfo:
     def __init__(
@@ -28,9 +25,6 @@ class CompleteInfo:
 
 
 class Repo(metaclass=ABCMeta):
-    def __init__(self, agata_api: AgataApi = AgataApiImpl()):
-        self.agata_api = agata_api
-
     @abstractmethod
     def get_menza_list(self) -> Result[list[Subsystem], Exception]:
         """Gets list of all the CTU menzas"""
@@ -51,6 +45,11 @@ class Repo(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_image(self, dish: Dish) -> Result[ascii_magic.AsciiArt, Exception]:
+    def get_rating(self) -> Result[DishRatingMapper, Exception]:
+        """Get the current rating status"""
+        pass
+
+    @abstractmethod
+    def get_image(self, dish: Dish) -> Result[str, Exception]:
         """Gets image in ascii_art format"""
         pass

@@ -32,8 +32,15 @@ class Main:
         self.stdscr.keypad(False)
 
     def exit_with_error(self, error: Exception):
-        self.exit_courses()
-        print(error)
+        stdscr = self.stdscr
+        stdscr.clear()
+
+        stdscr.addstr("App failed with an exception.\n\n")
+        stdscr.addstr(str(error) + "\n\n",)
+        stdscr.addstr("Press a key to exit...")
+        stdscr.refresh()
+
+        stdscr.getch();
 
     @staticmethod
     def __inner_scr(scr: CW) -> CW:
@@ -75,6 +82,14 @@ class Main:
         info_scr = Main.__inner_scr(info_border)
         self.info_view = Info(info_scr)
 
+    def __setup_rating(self):
+        rating = self.repo.get_rating()
+        match rating:
+            case Ok(value):
+                self.dish_view.update_rating(value)
+            case Err(_):
+                pass
+
     def __run_with_subsystems(self, menza_list: list[Subsystem]):
 
         menu_view = self.menu_view
@@ -97,7 +112,7 @@ class Main:
         res = self.repo.get_dish_list(system)
         match res:
             case Ok(value):
-                dish_view.update_info(value)
+                dish_view.update_data(system, value)
             case Err(e):
                 self.exit_with_error(e)
 
@@ -118,7 +133,7 @@ class Main:
                 res = self.repo.get_dish_list(system)
                 match res:
                     case Ok(value):
-                        dish_view.update_info(value)
+                        dish_view.update_data(system, value)
                     case Err(e):
                         self.exit_with_error(e)
 
@@ -142,6 +157,7 @@ class Main:
             return
 
         self.__layout_screen(stdscr)
+        self.__setup_rating()
 
         menza_list = self.repo.get_menza_list()
         match menza_list:

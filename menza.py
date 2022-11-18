@@ -6,9 +6,6 @@
 # from src.repo import repo
 # import ascii_magic
 from src.gui.main import Main
-import sys
-
-print(sys.path)
 
 #subsystems = repo.get_menza_list()
 #dish_list = repo.get_dish_list(subsystems[5])

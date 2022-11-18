@@ -76,7 +76,12 @@ class LastaApiImpl(LastaApi):
     def dish_id(self, menza_name: str, dish_name: str) -> str:
         """Creates dish id according to BE standard"""
 
-        return LastaApiImpl.__dish_id("CVUT", menza_name, dish_name)
+        id = LastaApiImpl.__dish_id("CVUT", menza_name, dish_name)
+        # Used for id generation while debugging
+        #if "name_part" in dish_name:
+        #    raise RuntimeError("id for " + dish_name + ": " + id)
+
+        return id
 
     @staticmethod
     def __dish_id(provider: str, menza_name: str, dish_name: str) -> str:

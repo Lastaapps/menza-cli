@@ -1,19 +1,20 @@
 import ascii_magic
-from result import Result, as_result
+from result import as_result
 
 from src.api.agata_api import AgataApi
 from src.api.agata_api_impl import AgataApiImpl
-from src.api.agata_entity import Info, OpenTime, Contact, Address
+from src.api.agata_entity import OpenTime
 from src.api.agata_entity import Subsystem, Dish
-
-import src.api.lasta_api as lasta
-
-from .repo import Repo, CompleteInfo, TimeGroup
+from src.api.lasta_api import LastaApi
+from src.api.lasta_api_impl import LastaApiImpl
+from src.api.lasta_entity import Status
+from .repo import Repo, CompleteInfo, TimeGroup, DishRatingMapper
 
 
 class RepoImpl(Repo):
-    def __init__(self, agata_api: AgataApi = AgataApiImpl()):
+    def __init__(self, agata_api: AgataApi = AgataApiImpl(), lasta_api: LastaApi = LastaApiImpl()):
         self.agata_api = agata_api
+        self.lasta_api = lasta_api
 
     @as_result(Exception)
     def get_menza_list(self) -> list[Subsystem]:
@@ -75,7 +76,21 @@ class RepoImpl(Repo):
         return CompleteInfo(info, times, contacts, addresses)
 
     @as_result(Exception)
-    def get_image(self, dish: Dish) -> ascii_magic.AsciiArt:
+    def get_rating(self) -> DishRatingMapper:
+        """Get the current rating status"""
+
+        self.rating_list = self.lasta_api.get_status()
+
+        def ratingProvider(subsystem: Subsystem, dish: Dish) -> tuple[float, int]:
+            # TODO check if the correct params are passed
+            id = self.lasta_api.dish_id(subsystem.description, dish.complete)
+            return next(((x.rating, x.rate_count) for x in self.rating_list if x.id == id), (0, 0))
+
+        return ratingProvider
+
+
+    @as_result(Exception)
+    def get_image(self, dish: Dish) -> str:
         """Gets image in ascii_art format"""
 
         print(self.agata_api.get_image_url(dish.subsystem_id, dish.photo))
