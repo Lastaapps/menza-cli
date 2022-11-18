@@ -47,9 +47,10 @@ class RepoImpl(Repo):
         return out
 
     @as_result(Exception)
-    def get_complete_info(self, subsystem_id: int) -> CompleteInfo:
+    def get_complete_info(self, subsystem: Subsystem) -> CompleteInfo:
         """Combines all the info about a menza"""
 
+        subsystem_id = subsystem.id
         info = list(
             filter(
                 lambda x: x.subsystem_id == subsystem_id,

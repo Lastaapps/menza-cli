@@ -37,12 +37,16 @@ class Repo(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_dish_list(self, system: Subsystem) -> Result[dict[str, list[Dish]], Exception]:
+    def get_dish_list(
+        self, system: Subsystem
+    ) -> Result[dict[str, list[Dish]], Exception]:
         """Get today dish menu in a menza"""
         pass
 
     @abstractmethod
-    def get_complete_info(self, subsystem_id: int) -> Result[CompleteInfo, Exception]:
+    def get_complete_info(
+        self, subsystem: Subsystem
+    ) -> Result[CompleteInfo, Exception]:
         """Combines all the info about a menza"""
         pass
 

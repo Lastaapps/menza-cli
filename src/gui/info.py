@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING
-import curses as cr
 from src.repo.repo import CompleteInfo
 
 if TYPE_CHECKING:
@@ -10,10 +9,8 @@ else:
 
 class Info:
     def __init__(self, scr: CW):
-        xy = scr.getbegyx()
-        size = scr.getmaxyx()
-        inner = cr.newwin(size[0] - 2, size[1] - 2, xy[0] + 1, xy[1] + 1)
-        self.win = inner
+        self.size = scr.getmaxyx()
+        self.win = scr
 
     def _print_label(self, win: CW, pos: int, label: str):
         if len(label) != 0:
@@ -24,6 +21,7 @@ class Info:
     def update_info(self, info: CompleteInfo):
         win = self.win
         win.clear()
+        size = win.getmaxyx()
 
         pos: int = 0
 
@@ -31,6 +29,10 @@ class Info:
         pos = self._print_label(win, pos, info.footer)
 
         for group in info.times.values():
+            if pos > size[0] - 6:
+                win.refresh()
+                return
+
             win.addstr(pos, 0, group[0].serving_name)
             pos += 1
             for time in group:
@@ -47,6 +49,10 @@ class Info:
             pos += 1
 
         for contact in info.contacts:
+            if pos > size[0] - 6:
+                win.refresh()
+                return
+
             if contact.role:
                 win.addstr(pos, 0, contact.role)
                 pos += 1
@@ -64,6 +70,9 @@ class Info:
             pos += 1
 
         for address in info.addresses:
+            if pos > size[0] - 3:
+                win.refresh()
+                return
             win.addstr(pos, 0, address.address)
             pos += 1
             win.addstr(pos, 0, address.gps)

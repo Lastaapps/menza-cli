@@ -9,13 +9,11 @@ else:
 
 
 class Menu:
-    def __init__(self, scr: CW, menza_list: list[Subsystem]):
+    def __init__(self, scr: CW):
         self.index = 0
-        xy = scr.getbegyx()
-        size = scr.getmaxyx()
-        inner = cr.newwin(size[0] - 2, size[1] - 2, xy[0] + 1, xy[1] + 1)
-        self.win = inner
-        self.menza_list = menza_list
+        self.size = scr.getmaxyx()
+        self.win = scr
+        self.menza_list = []
 
     def draw_line(self, index: int):
         menza = self.menza_list[index]
@@ -24,15 +22,18 @@ class Menu:
         if selected == index:
             win.attron(cr.A_REVERSE)
         text = ("O" if menza.open else "X") + f" {menza.id} " + menza.description
-        win.addstr(index, 1, text.ljust(win.getmaxyx()[1] - 1))
+        win.addstr(index, 0, text.ljust(win.getmaxyx()[1]))
         win.attroff(cr.A_REVERSE)
 
-    def reload(self):
-        for i in range(len(self.menza_list)):
+    def update_data(self, menza_list: list[Subsystem]):
+        self.menza_list = menza_list
+
+        for i in range(len(menza_list)):
             self.draw_line(i)
         self.win.refresh()
 
-    def select(self, index: int):
+    def select(self, subsystem: Subsystem):
+        index = self.menza_list.index(subsystem)
         old_index = self.index
         self.index = index
         self.draw_line(old_index)

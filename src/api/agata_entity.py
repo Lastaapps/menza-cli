@@ -4,6 +4,7 @@ https://agata-new.suz.cvut.cz/jidelnicky/JAPI/JAPI-popis.html
 """
 
 from typing import Any
+import re
 
 
 class DataClass:
@@ -59,6 +60,10 @@ class DishType(DataClass):
 class Dish(DataClass):
     """TDish entity"""
 
+    @staticmethod
+    def __parse_allergens(allergens: str) -> list[str]:
+        return re.split(", ;.", allergens)
+
     def __init__(self, data: dict[str, Any]):
         self.id = int(data["id"])
         self.subsystem_id = int(data["podsystem_id"])
@@ -71,8 +76,12 @@ class Dish(DataClass):
         self.side_dish_b = str(data["priloha_b"])
         self.price_student = float(data["cena_stud"])
         self.price_normal = float(data["cena"])
-        self.allergens = str(data["alergeny"])
+        self.allergens = Dish.__parse_allergens(str(data["alergeny"]))
         self.photo = str(data["foto"])
+
+        self.complete = self.name
+        self.complete += (self.side_dish_a + " ") if self.side_dish_a else ""
+        self.complete += (self.side_dish_b + " ") if self.side_dish_b else ""
 
 
 # --- Menza Info --------------------------------------------------------------
