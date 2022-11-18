@@ -78,7 +78,7 @@ class LastaApiImpl(LastaApi):
 
         id = LastaApiImpl.__dish_id("CVUT", menza_name, dish_name)
         # Used for id generation while debugging
-        #if "name_part" in dish_name:
+        # if "name_part" in dish_name:
         #    raise RuntimeError("id for " + dish_name + ": " + id)
 
         return id

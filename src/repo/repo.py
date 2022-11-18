@@ -7,7 +7,10 @@ from src.api.agata_entity import Subsystem, Dish
 
 TimeServingGroup = dict[int, list[OpenTime]]
 TimeGroup = dict[int, TimeServingGroup]
-DishRatingMapper = Callable[[Subsystem, Dish], tuple[float, int]] # (rating, rating count)
+DishRatingMapper = Callable[
+    [Subsystem, Dish], tuple[float, int]
+]  # (rating, rating count)
+
 
 class CompleteInfo:
     def __init__(
@@ -50,6 +53,11 @@ class Repo(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_image(self, dish: Dish) -> Result[str, Exception]:
+    def get_image(self, dish: Dish, width: int, height: int) -> Result[str, Exception]:
         """Gets image in ascii_art format"""
+        pass
+
+    @abstractmethod
+    def get_image_url(self, dish: Dish) -> str | None:
+        """Gets image web url"""
         pass

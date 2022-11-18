@@ -12,7 +12,9 @@ from .repo import Repo, CompleteInfo, TimeGroup, DishRatingMapper
 
 
 class RepoImpl(Repo):
-    def __init__(self, agata_api: AgataApi = AgataApiImpl(), lasta_api: LastaApi = LastaApiImpl()):
+    def __init__(
+        self, agata_api: AgataApi = AgataApiImpl(), lasta_api: LastaApi = LastaApiImpl()
+    ):
         self.agata_api = agata_api
         self.lasta_api = lasta_api
 
@@ -84,18 +86,34 @@ class RepoImpl(Repo):
         def ratingProvider(subsystem: Subsystem, dish: Dish) -> tuple[float, int]:
             # TODO check if the correct params are passed
             id = self.lasta_api.dish_id(subsystem.description, dish.complete)
-            return next(((x.rating, x.rate_count) for x in self.rating_list if x.id == id), (0, 0))
+            return next(
+                ((x.rating, x.rate_count) for x in self.rating_list if x.id == id),
+                (0, 0),
+            )
 
         return ratingProvider
 
-
     @as_result(Exception)
-    def get_image(self, dish: Dish) -> str:
+    def get_image(self, dish: Dish, width: int, height: int) -> str:
         """Gets image in ascii_art format"""
 
-        print(self.agata_api.get_image_url(dish.subsystem_id, dish.photo))
-        return ascii_magic.from_url(
+        text = ascii_magic.from_url(
             self.agata_api.get_image_url(dish.subsystem_id, dish.photo),
-            columns=200,
+            columns=width,
             char="❚",
         )
+
+        lines = text.split("\n")
+        if len(lines) >= height:
+            diff = height - len(lines)
+            return "\n".join(lines[diff // 2 : height - diff // 2])
+        else:
+            diff = len(lines) - height
+            l = [""] * (diff // 2) + lines + [""] * (diff // 2)
+            return "\n".join(l)
+
+    def get_image_url(self, dish: Dish) -> str | None:
+        """Gets image web url"""
+        if len(dish.photo) == 0:
+            return None
+        return self.agata_api.get_image_url(dish.subsystem_id, dish.photo)

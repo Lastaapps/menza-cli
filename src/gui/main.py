@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from result import Ok, Err
 import curses as cr
-import time
+import webbrowser
 
 if TYPE_CHECKING:
     from _curses import _CursesWindow as CW
@@ -14,6 +14,15 @@ from src.gui.dish import DishView
 from src.repo.repo import Repo
 from src.repo.repo_impl import RepoImpl
 from src.api.agata_entity import Subsystem
+from .key_handler import (
+    HandlerType,
+    HandlerEvent,
+    Nothing,
+    LoadMenza,
+    OpenImage,
+    SwitchToDish,
+    SwitchToMenu,
+)
 
 MENU_WIDTH = 32
 INFO_WIDTH = 40
@@ -24,6 +33,7 @@ MIN_TERM_HEIGHT = 42
 class Main:
     def __init__(self, repo: Repo = RepoImpl()):
         self.repo = repo
+        self.input_state = HandlerType.MENU
 
     def exit_courses(self):
         cr.nocbreak()
@@ -36,11 +46,13 @@ class Main:
         stdscr.clear()
 
         stdscr.addstr("App failed with an exception.\n\n")
-        stdscr.addstr(str(error) + "\n\n",)
+        stdscr.addstr(
+            str(error) + "\n\n",
+        )
         stdscr.addstr("Press a key to exit...")
         stdscr.refresh()
 
-        stdscr.getch();
+        stdscr.getch()
 
     @staticmethod
     def __inner_scr(scr: CW) -> CW:
@@ -71,7 +83,7 @@ class Main:
         dish_border.addstr(0, 3, "Dish list")
         dish_border.refresh()
         dish_scr = Main.__inner_scr(dish_border)
-        self.dish_view = DishView(dish_scr)
+        self.dish_view = DishView(dish_scr, self.repo)
 
         # Draw info border
         info_border = cr.newwin(size[0] - 1, INFO_WIDTH, 0, size[1] - INFO_WIDTH)
@@ -90,57 +102,90 @@ class Main:
             case Err(_):
                 pass
 
-    def __run_with_subsystems(self, menza_list: list[Subsystem]):
+    def __setup_subsystems(self):
 
+        menza_list = self.repo.get_menza_list()
         menu_view = self.menu_view
+
+        match menza_list:
+            case Ok(value):
+                menu_view.update_data(value)
+                return True
+            case Err(e):
+                self.exit_with_error(e)
+                return False
+
+    def __load_subsystem(self, subsystem: Subsystem):
+
         dish_view = self.dish_view
         info_view = self.info_view
 
-        menu_view.update_data(menza_list)
+        dish_data = self.repo.get_dish_list(subsystem)
+        info_data = self.repo.get_complete_info(subsystem)
 
-        system = list(filter(lambda s: "Strahov" in s.description, menza_list))[0]
-        menu_view.select(system)
-
-        info_data = self.repo.get_complete_info(system)
+        match dish_data:
+            case Ok(value):
+                dish_view.update_data(subsystem, value)
+            case Err(e):
+                self.exit_with_error(e)
+                return False
 
         match info_data:
             case Ok(value):
                 info_view.update_info(value)
             case Err(e):
                 self.exit_with_error(e)
+                return False
+        return True
 
-        res = self.repo.get_dish_list(system)
-        match res:
-            case Ok(value):
-                dish_view.update_data(system, value)
-            case Err(e):
-                self.exit_with_error(e)
-
-        input()
-
+    def __handleInput(self) -> None:
+        stdscr = self.stdscr
         while True:
-            for system in menza_list:
-                menu_view.select(system)
+            char = stdscr.getch()
 
-                info_data = self.repo.get_complete_info(system)
+            if char == cr.ERR:
+                continue
+            elif char in (ord("q"), 27):
+                return
 
-                match info_data:
-                    case Ok(value):
-                        info_view.update_info(value)
-                    case Err(e):
-                        self.exit_with_error(e)
+            res: HandlerEvent
+            match self.input_state:
+                case HandlerType.MENU:
+                    res = self.menu_view.handleKey(char)
+                case HandlerType.DISH:
+                    res = self.dish_view.handleKey(char)
+                case _:
+                    raise RuntimeError("Unknown key type: " + str(self.input_state))
 
-                res = self.repo.get_dish_list(system)
-                match res:
-                    case Ok(value):
-                        dish_view.update_data(system, value)
-                    case Err(e):
-                        self.exit_with_error(e)
+            # matching handling result
+            if isinstance(res, Nothing):
+                ...
 
-                time.sleep(1)
+            elif isinstance(res, LoadMenza):
+                self.input_state = HandlerType.DISH
+                self.dish_view.reset()
+                if not self.__load_subsystem(res.subsystem):
+                    return
 
-    def run(self, stdscr: CW):
+            elif isinstance(res, OpenImage):
+                url = self.repo.get_image_url(res.dish)
+                if isinstance(url, str):
+                    webbrowser.open_new_tab(url)
+
+            elif isinstance(res, SwitchToMenu):
+                self.input_state = HandlerType.MENU
+
+            elif isinstance(res, SwitchToDish):
+                self.input_state = HandlerType.DISH
+
+            else:
+                raise RuntimeError(
+                    "Unhandled type returned from key handling: " + str(type(res))
+                )
+
+    def __run(self, stdscr: CW):
         self.stdscr = stdscr
+        stdscr.refresh()
 
         # Check screen size
         if stdscr.getmaxyx()[1] < MIN_TERM_WIDTH:
@@ -157,17 +202,16 @@ class Main:
             return
 
         self.__layout_screen(stdscr)
-        self.__setup_rating()
 
-        menza_list = self.repo.get_menza_list()
-        match menza_list:
-            case Ok(value):
-                self.__run_with_subsystems(value)
-            case Err(e):
-                self.exit_with_error(e)
-                return
+        if not self.__setup_subsystems():
+            return
 
-        self.exit_courses(stdscr)
+        self.__setup_rating()  # may fail, not a huge problem
+
+        # handle keyboard
+        self.__handleInput()
+
+        self.exit_courses()
 
     def start_app(self):
-        cr.wrapper(self.run)
+        cr.wrapper(self.__run)
