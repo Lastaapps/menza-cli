@@ -24,3 +24,10 @@ echo "Don't forget to activate the virtual environment"
 echo "source $VENV/bin/activate"
 echo "Then you can run the app by running ./menza.py"
 
+
+if which xdg-open &> /dev/null; then
+    true
+else
+    echo "xdgs-open is not installed, you can't view images!"
+fi
+exit

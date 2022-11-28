@@ -8,7 +8,6 @@ from src.repo.repo import DishRatingMapper, Repo
 from .key_handler import (
     HandlerEvent,
     KeyHandler,
-    HandlerType,
     Nothing,
     OpenImage,
     SwitchToMenu,
@@ -28,6 +27,7 @@ class DishView(KeyHandler):
         scr.refresh()
 
         self.dish_index = 0
+        self.focused = False
         self.data: dict[str, list[Dish]] = {}
         self.most_allergens = 0
         self.rate_mapper: DishRatingMapper = lambda _, __: (0, 0)
@@ -105,6 +105,10 @@ class DishView(KeyHandler):
         #     self.__print_image(self.__get_selected_dish())
         #     return Nothing()
 
+        # Same as o for now
+        elif char in [ord(' '), ord('\n'), cr.KEY_ENTER]:
+            return OpenImage(self.__get_selected_dish())
+
         elif char in [ord("o")]:
             return OpenImage(self.__get_selected_dish())
         else:
@@ -168,10 +172,12 @@ class DishView(KeyHandler):
             content += ",".join(dish.allergens).rjust(self.most_allergens)
             content += space
 
-        if selected:
+        if selected and self.focused:
             win.attron(cr.A_REVERSE)
+
         win.addstr(y, 1, content)
-        if selected:
+
+        if selected and self.focused:
             win.attroff(cr.A_REVERSE)
 
     def __redraw(self) -> None:
@@ -188,9 +194,11 @@ class DishView(KeyHandler):
                 self.most_allergens = max(self.most_allergens, digits)
 
         if not has_values:
-            win.attron(cr.A_REVERSE)
+            if self.focused:
+                win.attron(cr.A_REVERSE)
             win.addstr("No dish available")
-            win.attroff(cr.A_REVERSE)
+            if self.focused:
+                win.attroff(cr.A_REVERSE)
             win.refresh()
             return
 
@@ -212,6 +220,10 @@ class DishView(KeyHandler):
 
         win.refresh()
 
+    def setFocus(self, focus: bool):
+        self.focused = focus
+        self.__redraw()
+
     def reset(self):
         self.data = {}
         self.dish_index = 0
@@ -228,3 +240,4 @@ class DishView(KeyHandler):
     def update_rating(self, mapping: DishRatingMapper):
         self.rate_mapper = mapping
         self.__redraw()
+

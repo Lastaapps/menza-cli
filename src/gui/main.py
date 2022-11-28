@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 from result import Ok, Err
 import curses as cr
 import webbrowser
+import subprocess
 
 if TYPE_CHECKING:
     from _curses import _CursesWindow as CW
@@ -110,6 +111,7 @@ class Main:
         match menza_list:
             case Ok(value):
                 menu_view.update_data(value)
+                menu_view.setFocus(True)
                 return True
             case Err(e):
                 self.exit_with_error(e)
@@ -162,6 +164,8 @@ class Main:
                 ...
 
             elif isinstance(res, LoadMenza):
+                self.menu_view.setFocus(False)
+                self.dish_view.setFocus(True)
                 self.input_state = HandlerType.DISH
                 self.dish_view.reset()
                 if not self.__load_subsystem(res.subsystem):
@@ -170,12 +174,18 @@ class Main:
             elif isinstance(res, OpenImage):
                 url = self.repo.get_image_url(res.dish)
                 if isinstance(url, str):
-                    webbrowser.open_new_tab(url)
+                    # Opens tab twice for some reasong
+                    # webbrowser.open_new_tab(url)
+                    subprocess.run(["xdg-open", url])
 
             elif isinstance(res, SwitchToMenu):
+                self.menu_view.setFocus(True)
+                self.dish_view.setFocus(False)
                 self.input_state = HandlerType.MENU
 
             elif isinstance(res, SwitchToDish):
+                self.menu_view.setFocus(False)
+                self.dish_view.setFocus(True)
                 self.input_state = HandlerType.DISH
 
             else:

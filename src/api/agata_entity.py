@@ -62,7 +62,7 @@ class Dish(DataClass):
 
     @staticmethod
     def __parse_allergens(allergens: str) -> list[str]:
-        return re.split(", ;.", allergens)
+        return list(filter(lambda x: x != "", re.split(",| |;|\\.", allergens)))
 
     def __init__(self, data: dict[str, Any]):
         self.id = int(data["id"])

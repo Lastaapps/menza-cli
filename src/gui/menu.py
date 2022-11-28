@@ -19,26 +19,34 @@ else:
 class Menu(KeyHandler):
     def __init__(self, scr: CW):
         self.index = 0
+        self.focused = False
         self.size = scr.getmaxyx()
         self.win = scr
         self.menza_list = []
 
-    def draw_line(self, index: int):
+    def __draw_line(self, index: int):
         menza = self.menza_list[index]
         win = self.win
         selected = self.index
         if selected == index:
-            win.attron(cr.A_REVERSE)
+            win.attron(cr.A_REVERSE if self.focused else cr.A_UNDERLINE)
+
         text = ("O" if menza.open else "X") + f" {menza.id:2d} " + menza.description
         win.addstr(index, 0, text.ljust(win.getmaxyx()[1]))
-        win.attroff(cr.A_REVERSE)
+
+        win.attroff(cr.A_REVERSE if self.focused else cr.A_UNDERLINE)
+
+    def __redraw(self):
+        menza_list = self.menza_list
+
+        for i in range(len(menza_list)):
+            self.__draw_line(i)
+        self.win.refresh()
+
 
     def update_data(self, menza_list: list[Subsystem]):
         self.menza_list = menza_list
-
-        for i in range(len(menza_list)):
-            self.draw_line(i)
-        self.win.refresh()
+        self.__redraw()
 
     def __check_index(self) -> None:
         if len(self.menza_list) == 0:
@@ -56,8 +64,8 @@ class Menu(KeyHandler):
         self.index = index
         self.__check_index()
 
-        self.draw_line(old_index)
-        self.draw_line(self.index)
+        self.__draw_line(old_index)
+        self.__draw_line(self.index)
         self.win.refresh()
 
     def handleKey(self, char: int) -> HandlerEvent:
@@ -72,7 +80,13 @@ class Menu(KeyHandler):
         elif char in (ord("l"), cr.KEY_RIGHT):
             return SwitchToDish()
 
-        elif char in (ord(" "), ord("\n"), cr.KEY_ENTER):
+        elif char in (ord(" "), ord("\n"), ord("o"), cr.KEY_ENTER):
             return LoadMenza(self.menza_list[self.index])
         else:
             return Nothing()
+
+    def setFocus(self, focus: bool):
+        self.focused = focus
+        self.__draw_line(self.index)
+        self.win.refresh()
+
