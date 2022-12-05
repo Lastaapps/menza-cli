@@ -1,0 +1,11 @@
+MenzaCLI
+
+Pokud máte hlad a pouze příkazouvou řádku, aplikace vám umožní prohlížet si
+denní i týdenní jídelníčky menz ČVUT, nadále si zobrazit stav konta a historii
+(pokud se mi podaří plomoit menza login), otevírací doby a kontakty. Nadále si
+alergici budou moc zvolit alergeny a nežádoucí jídla budou zvýrazněna. Bude
+podporován jak iteraktivní mód (ncurses či obdoba), tak i příkazouvý mód. Jako
+finální bonus bude možno jídla hodnotit a zobrazovat si hodnocení ostatních.
+Hodnotící BE (není součástí práce) je sdílený s mobilní aplikací. K načítání
+dat menz bude použita kombinace JSON API callů a Scrapowání webu, kde API
+endpoint chybí.
