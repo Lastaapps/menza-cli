@@ -21,7 +21,7 @@ class Status(DataClass):
         self.id = str(data["id"])
         self.rate_count = int(data["rateCount"])
         self.rating = float(data["rating"])
-        self.soldOutCount = int(data["soldOutCount"])
+        self.sold_out_count = int(data["soldOutCount"])
 
 
 class Rate(DataClass):

@@ -176,7 +176,7 @@ class Main:
                 if isinstance(url, str):
                     # Opens tab twice for some reasong
                     # webbrowser.open_new_tab(url)
-                    subprocess.run(["xdg-open", url])
+                    subprocess.run(["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
             elif isinstance(res, SwitchToMenu):
                 self.menu_view.setFocus(True)

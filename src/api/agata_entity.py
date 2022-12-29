@@ -121,7 +121,7 @@ class Contact(DataClass):
         self.id = int(data["id"])
         self.subsystem_id = int(data["podsystem_id"])
         self.gps = str(data["maps"])
-        self.order = int(data["poradi"] or 0)
+        self.order = int(data["poradi_web"] or 0)
         self.role = str(data["pozice"])
         self.name = str(data["jmeno"])
         self.phone = str(data["telefon"])

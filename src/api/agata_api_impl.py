@@ -35,7 +35,7 @@ class AgataApiImpl(AgataApi):
         self.api_path = api_path
         self.api_key = api_key
 
-    def build_url(
+    def __build_url(
         self,
         function: str,
         subsystem: Optional[int] = None,
@@ -51,7 +51,7 @@ class AgataApiImpl(AgataApi):
             url += "&SecondID=" + str(secondId)
         return url
 
-    def parse_response_body(self, url: str) -> Any:
+    def __parse_response_body(self, url: str) -> Any:
         """Decodes resulting JSON"""
 
         r: requests.Response = requests.get(url)
@@ -60,8 +60,8 @@ class AgataApiImpl(AgataApi):
     def get_dish_list(self) -> list[DishList]:
         """Returns list of dish"""
 
-        data: list[dict[str, Any]] = self.parse_response_body(
-            self.build_url("GetJidelnicky")
+        data: list[dict[str, Any]] = self.__parse_response_body(
+            self.__build_url("GetJidelnicky")
         )
         return [DishList(x) for x in data]
 
@@ -69,7 +69,7 @@ class AgataApiImpl(AgataApi):
         """Gets subsystems"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetPodsystemy", secondId=1)) or []
+            self.__parse_response_body(self.__build_url("GetPodsystemy", secondId=1)) or []
         )
         return [Subsystem(x) for x in data]
 
@@ -77,7 +77,7 @@ class AgataApiImpl(AgataApi):
         """Get serving places"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetVydejny", subsystem_id)) or []
+            self.__parse_response_body(self.__build_url("GetVydejny", subsystem_id)) or []
         )
         return [ServingPlace(x) for x in data]
 
@@ -85,7 +85,7 @@ class AgataApiImpl(AgataApi):
         """Gets dish types in a subsystem"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetKategorie", subsystem_id)) or []
+            self.__parse_response_body(self.__build_url("GetKategorie", subsystem_id)) or []
         )
         return [DishType(x) for x in data]
 
@@ -93,7 +93,7 @@ class AgataApiImpl(AgataApi):
         """Gets dishes for today in the subsystem given"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetJidla", subsystem_id, 1)) or []
+            self.__parse_response_body(self.__build_url("GetJidla", subsystem_id, 1)) or []
         )
         return [Dish(x) for x in data]
 
@@ -101,7 +101,7 @@ class AgataApiImpl(AgataApi):
         """Gets info about the subsystem given"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetInfo", subsystem_id, 1)) or []
+            self.__parse_response_body(self.__build_url("GetInfo", subsystem_id, 1)) or []
         )
         return [Info(x) for x in data]
 
@@ -109,7 +109,7 @@ class AgataApiImpl(AgataApi):
         """Gets opening times of the subsystem given"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetOtDoby", subsystem_id, 1)) or []
+            self.__parse_response_body(self.__build_url("GetOtDoby", subsystem_id, 1)) or []
         )
         return [OpenTime(x) for x in data]
 
@@ -117,7 +117,7 @@ class AgataApiImpl(AgataApi):
         """Gets contacts to the subsystem given"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetKontakty")) or []
+            self.__parse_response_body(self.__build_url("GetKontakty")) or []
         )
         return [Contact(x) for x in data]
 
@@ -125,7 +125,7 @@ class AgataApiImpl(AgataApi):
         """Gets address of the subsystem given"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetAdresy")) or []
+            self.__parse_response_body(self.__build_url("GetAdresy")) or []
         )
         return [Address(x) for x in data]
 
@@ -133,7 +133,7 @@ class AgataApiImpl(AgataApi):
         """Gets week dish menus available"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetTydny", subsystem_id)) or []
+            self.__parse_response_body(self.__build_url("GetTydny", subsystem_id)) or []
         )
         return [WeekInfo(x) for x in data]
 
@@ -141,7 +141,7 @@ class AgataApiImpl(AgataApi):
         """Gets a dish menu for the week id given"""
 
         data: list[dict[str, Any]] = (
-            self.parse_response_body(self.build_url("GetTydnyDny", secondId=week_id))
+            self.__parse_response_body(self.__build_url("GetTydnyDny", secondId=week_id))
             or []
         )
         return [DayDish(x) for x in data]
