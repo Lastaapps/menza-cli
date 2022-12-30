@@ -12,6 +12,7 @@ from .key_handler import (
     OpenImage,
     SwitchToMenu,
 )
+from .rating import RatingView
 
 if TYPE_CHECKING:
     from _curses import _CursesWindow as CW
@@ -32,6 +33,7 @@ class DishView(KeyHandler):
         self.most_allergens = 0
         self.rate_mapper: DishRatingMapper = lambda _, __: (0, 0)
         self.is_showing_image = False
+        self.rating_view : RatingView | None = None
 
     def __print_image(self, dish: Dish):
         win = self.win
@@ -83,13 +85,43 @@ class DishView(KeyHandler):
         self.dish_index = new_index
         self.__redraw()
 
+    @staticmethod
+    def __inner_scr(scr: CW) -> CW:
+        xy = scr.getbegyx()
+        size = scr.getmaxyx()
+        return cr.newwin(size[0] - 4, size[1] - 4, xy[0] + 2, xy[1] + 2)
+
+    def __open_rating(self):
+        y, x = self.win.getbegyx()
+        height, width  = self.size
+        rating_width = 41
+        rating_height = 7
+        rating_border = cr.newwin(rating_height, rating_width, y + (height - rating_height) // 2, x + (width - rating_width) // 2, )
+        rating_border.border()
+        rating_border.addstr(0, 3, "Rating")
+        rating_border.refresh()
+        rating_scr = DishView.__inner_scr(rating_border)
+        self.rating_view = RatingView(rating_scr, self.repo, self.subsystem, self.__get_selected_dish())
+        self.rating_view.draw()
+
+
     def handleKey(self, char: int) -> HandlerEvent:
         if self.is_showing_image:
             self.__redraw()
             self.is_showing_image = False
             return Nothing()
 
-        if char in [ord("j"), cr.KEY_DOWN]:
+        if self.rating_view != None:
+            res = self.rating_view.handleKey(char)
+            self.rating_view = None
+            self.__redraw()
+            return res
+
+        if char in [ord("r")]:
+            self.__open_rating()
+            return Nothing()
+
+        elif char in [ord("j"), cr.KEY_DOWN]:
             self.__select_index(self.dish_index + 1)
             return Nothing()
 

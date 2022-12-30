@@ -61,3 +61,8 @@ class Repo(metaclass=ABCMeta):
     def get_image_url(self, dish: Dish) -> str | None:
         """Gets image web url"""
         pass
+
+    @abstractmethod
+    def send_rating(self, subsystem: Subsystem, dish: Dish, rating: int) -> Result[None, Exception]:
+        """Send rating for dish"""
+        pass

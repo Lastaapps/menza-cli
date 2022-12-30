@@ -17,9 +17,9 @@ class RepoImpl(Repo):
     def __init__(
         self,
         # agata_api: AgataApi = AgataApiImpl(),
-        # lasta_api: LastaApi = LastaApiImpl(),
+        lasta_api: LastaApi = LastaApiImpl(),
         agata_api: AgataApi = AgataApiMock(),
-        lasta_api: LastaApi = LastaApiMock(),
+        # lasta_api: LastaApi = LastaApiMock(),
     ):
         self.agata_api = agata_api
         self.lasta_api = lasta_api
@@ -123,3 +123,8 @@ class RepoImpl(Repo):
         if len(dish.photo) == 0:
             return None
         return self.agata_api.get_image_url(dish.subsystem_id, dish.photo)
+
+    @as_result(Exception)
+    def send_rating(self, subsystem: Subsystem, dish: Dish, rating: int) -> None:
+        id = self.lasta_api.dish_id(subsystem.description, dish.complete)
+        self.rating_list = self.lasta_api.post_rating(id, rating)

@@ -28,7 +28,7 @@ class LastaApiMock(LastaApi):
 
         if id in self.data:
             item = self.data[id]
-            item.rating = round((item.rate_count * item.rate_count + rating) / (item.rate_count + 1))
+            item.rating = round((1.0 * item.rate_count * item.rate_count + rating) / (item.rate_count + 1))
             item.rate_count += 1
         else:
             self.data[id] = Status({"id": id, "rateCount": 1, "rating": rating, "soldOutCount": 0})
