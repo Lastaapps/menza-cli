@@ -16,9 +16,9 @@ from .repo import Repo, CompleteInfo, TimeGroup, DishRatingMapper
 class RepoImpl(Repo):
     def __init__(
         self,
-        # agata_api: AgataApi = AgataApiImpl(),
+        agata_api: AgataApi = AgataApiImpl(),
         lasta_api: LastaApi = LastaApiImpl(),
-        agata_api: AgataApi = AgataApiMock(),
+        # agata_api: AgataApi = AgataApiMock(),
         # lasta_api: LastaApi = LastaApiMock(),
     ):
         self.agata_api = agata_api

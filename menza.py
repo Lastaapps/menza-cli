@@ -1,11 +1,16 @@
 #!python3
 # /bin/ is omitted because venv is expected
 
+from src.clickargs import app
+
+if __name__ == '__main__':
+    app()
+
+
 # from src.api import agata_api as a
 # from src.api import lasta_api as l
 # from src.repo import repo
 # import ascii_magic
-from src.gui.main import Main
 
 #subsystems = repo.get_menza_list()
 #dish_list = repo.get_dish_list(subsystems[5])
@@ -13,10 +18,6 @@ from src.gui.main import Main
 #print(dish_list)
 
 #ascii_magic.to_terminal(repo.get_image(dish_list["Minutka"][0]))
-
-Main().start_app()
-
-
 
 # print(str(a.get_dish_list()))
 # print(str(a.get_sub_systems()))

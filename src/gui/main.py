@@ -42,6 +42,19 @@ class Main:
         cr.endwin()
         self.stdscr.keypad(False)
 
+    def exit_with_message(self, message: str):
+        stdscr = self.stdscr
+        stdscr.clear()
+
+        stdscr.addstr("App failed with an exception.\n\n")
+        stdscr.addstr(
+            str(message) + "\n\n",
+        )
+        stdscr.addstr("Press a key to exit...")
+        stdscr.refresh()
+
+        stdscr.getch()
+
     def exit_with_error(self, error: Exception):
         stdscr = self.stdscr
         stdscr.clear()
