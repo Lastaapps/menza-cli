@@ -1,0 +1,12 @@
+[MAIN]
+
+py-version = 3.10.9
+
+[MESSAGES CONTROL]
+
+disable=
+    # False positives when calling decorated functions (no-value-for-parameter)
+    E1120,
+    # Suppressing result unknown imports (import-error)
+    E0401,
+

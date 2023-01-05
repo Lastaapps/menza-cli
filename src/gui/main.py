@@ -112,7 +112,9 @@ class Main:
         self.info_view = Info(info_scr)
 
         stdscr.move(size[0] - 1, 0)
-        stdscr.addstr("Developed by Lasta Apps (Petr Laštovička) in 2022. Monty Pythons are great, Python not so much.")
+        stdscr.addstr(
+            "Developed by Lasta Apps (Petr Laštovička) in 2022. Monty Pythons are great, Python not so much."
+        )
         github = "https://github.com/Lastaapps/menza-cli"
         stdscr.move(size[0] - 1, size[1] - 1 - len(github))
         stdscr.addstr(github)
@@ -213,7 +215,11 @@ class Main:
                 if isinstance(url, str):
                     # Opens tab twice for some reasong
                     # webbrowser.open_new_tab(url)
-                    subprocess.run(["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    subprocess.run(
+                        ["xdg-open", url],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
 
             elif isinstance(res, SwitchToMenu):
                 self.menu_view.set_focus(True)

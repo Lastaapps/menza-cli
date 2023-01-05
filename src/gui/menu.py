@@ -43,7 +43,6 @@ class Menu(KeyHandler):
             self.__draw_line(i)
         self.win.refresh()
 
-
     def update_data(self, menza_list: list[Subsystem]):
         self.menza_list = menza_list
         self.__redraw()
@@ -89,4 +88,3 @@ class Menu(KeyHandler):
         self.focused = focus
         self.__draw_line(self.index)
         self.win.refresh()
-

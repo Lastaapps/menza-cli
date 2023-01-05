@@ -9,10 +9,11 @@ from src import di
 
 KEY_MOCK = "mocked"
 
+
 @click.group(invoke_without_command=True)
-@click.option("--mocked", is_flag = True, default=False, help="Use testing data sources")
+@click.option("--mocked", is_flag=True, default=False, help="Use testing data sources")
 @click.pass_context
-def app(ctx : click.Context, mocked: bool):
+def app(ctx: click.Context, mocked: bool):
     if ctx.invoked_subcommand is None:
         # Start interactive
         di.get_main_gui(mocked).start_app()
@@ -21,33 +22,37 @@ def app(ctx : click.Context, mocked: bool):
         ctx.ensure_object(dict)
         ctx.obj[KEY_MOCK] = mocked
 
-@click.command("list", help = "Shown menza list")
+
+@click.command("list", help="Shown menza list")
 @click.pass_context
 def list(ctx: click.Context):
-    mocked : bool = ctx.obj[KEY_MOCK]
+    mocked: bool = ctx.obj[KEY_MOCK]
     command_list(mocked)
 
-@click.command("dish", help = "Show menu for the menza given")
+
+@click.command("dish", help="Show menu for the menza given")
 @click.argument("name")
 @click.pass_context
 def dish(ctx: click.Context, name: str):
-    mocked : bool = ctx.obj[KEY_MOCK]
+    mocked: bool = ctx.obj[KEY_MOCK]
     command_dish(mocked, name)
 
-@click.command("week", help = "Show week menu for the menza given")
+
+@click.command("week", help="Show week menu for the menza given")
 @click.argument("name")
 @click.pass_context
 def week(ctx: click.Context, name: str):
-    mocked : bool = ctx.obj[KEY_MOCK]
+    mocked: bool = ctx.obj[KEY_MOCK]
     command_week(mocked, name)
 
-@click.command("info", help = "List info about menza given")
+
+@click.command("info", help="List info about menza given")
 @click.argument("name")
 @click.pass_context
 def info(ctx: click.Context, name: str):
-    mocked : bool = ctx.obj[KEY_MOCK]
+    mocked: bool = ctx.obj[KEY_MOCK]
     command_info(mocked, name)
-    
+
 
 app.add_command(list)
 app.add_command(dish)

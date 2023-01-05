@@ -70,6 +70,8 @@ class Repo(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def send_rating(self, subsystem: Subsystem, dish: Dish, rating: int) -> Result[None, Exception]:
+    def send_rating(
+        self, subsystem: Subsystem, dish: Dish, rating: int
+    ) -> Result[None, Exception]:
         """Send rating for dish"""
         pass

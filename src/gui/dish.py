@@ -35,7 +35,7 @@ class DishView(KeyHandler):
         self.most_allergens = 0
         self.rate_mapper: DishRatingMapper = lambda _, __: (0, 0)
         self.is_showing_image = False
-        self.rating_view : RatingView | None = None
+        self.rating_view: RatingView | None = None
 
     # def __print_image(self, dish: Dish):
     #     win = self.win
@@ -143,7 +143,7 @@ class DishView(KeyHandler):
         #     return Nothing()
 
         # Same as o for now
-        elif char in [ord(' '), ord('\n'), cr.KEY_ENTER]:
+        elif char in [ord(" "), ord("\n"), cr.KEY_ENTER]:
             return OpenImage(self.__get_selected_dish())
 
         elif char in [ord("o")]:
@@ -286,4 +286,3 @@ class DishView(KeyHandler):
     def update_rating(self, mapping: DishRatingMapper):
         self.rate_mapper = mapping
         self.__redraw()
-

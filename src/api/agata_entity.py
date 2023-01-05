@@ -151,7 +151,9 @@ class WeekInfo(DataClass):
         self.valid_from = str(data["platnost_do"])
         self.valid_to = str(data["platnost_od"])
 
+
 days_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
 
 class DayDish(DataClass):
     """TDenJidlo"""

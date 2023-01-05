@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 else:
     from typing import Any as CW
 
+
 class WeekView(KeyHandler):
     def __init__(self, scr: CW, repo: Repo):
         self.size = scr.getmaxyx()
@@ -195,4 +196,3 @@ class WeekView(KeyHandler):
         self.subsystem = subsystem
         self.data = data
         self.__redraw()
-

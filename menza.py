@@ -1,25 +1,30 @@
 #!python3
 # /bin/ is omitted because venv is expected
+"""Menza main file"""
 
+from result import Ok, Err
 from src.clickargs import app
 from src.config import ConfigLoader
 from src import di
-from result import Ok, Err
+
 
 def main():
+    """Starts the app, loads config and starts click"""
+
     # Init config
     loaded = ConfigLoader().load_config()
     match loaded:
         case Ok(value):
             di.store_config(value)
-        case Err(e):
-            print(e)
+        case Err(error):
+            print(error)
             return
 
     # Start click
     app()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 
 # from src.api import agata_api as a
@@ -27,12 +32,12 @@ if __name__ == '__main__':
 # from src.repo import repo
 # import ascii_magic
 
-#subsystems = repo.get_menza_list()
-#dish_list = repo.get_dish_list(subsystems[5])
-#print("\n".join([str(x) for x in subsystems]))
-#print(dish_list)
+# subsystems = repo.get_menza_list()
+# dish_list = repo.get_dish_list(subsystems[5])
+# print("\n".join([str(x) for x in subsystems]))
+# print(dish_list)
 
-#ascii_magic.to_terminal(repo.get_image(dish_list["Minutka"][0]))
+# ascii_magic.to_terminal(repo.get_image(dish_list["Minutka"][0]))
 
 # print(str(a.get_dish_list()))
 # print(str(a.get_sub_systems()))

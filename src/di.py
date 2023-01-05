@@ -12,12 +12,15 @@ from src.config import AppConfig
 
 __config: AppConfig
 
+
 def store_config(config: AppConfig) -> None:
     global __config
     __config = config
 
+
 def get_config() -> AppConfig:
     return __config
+
 
 def get_agata_api(mocked: bool) -> AgataApi:
     if not mocked:
@@ -30,12 +33,14 @@ def get_agata_api(mocked: bool) -> AgataApi:
     else:
         return AgataApiMock()
 
+
 def get_lasta_api(mocked: bool) -> LastaApi:
     if not mocked:
         config = get_config()
         return LastaApiImpl(config.lasta_url, config.lasta_api_key)
     else:
         return LastaApiMock()
+
 
 def get_repo(mocked: bool) -> Repo:
     config = get_config()
@@ -44,6 +49,7 @@ def get_repo(mocked: bool) -> Repo:
         get_lasta_api(mocked),
         config.allergens,
     )
+
 
 def get_main_gui(mocked: bool) -> Main:
     return Main(get_repo(mocked))

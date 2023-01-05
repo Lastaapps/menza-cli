@@ -16,11 +16,15 @@ if TYPE_CHECKING:
 else:
     from typing import Any as CW
 
+
 class RatingView(KeyHandler):
-    
-    def __init__(self, scr: CW, repo: Repo,
-                 menza: Subsystem, dish: Dish,
-                 ):
+    def __init__(
+        self,
+        scr: CW,
+        repo: Repo,
+        menza: Subsystem,
+        dish: Dish,
+    ):
         self.size = scr.getmaxyx()
         self.win = scr
         self.repo = repo
@@ -28,14 +32,14 @@ class RatingView(KeyHandler):
 
         self.menza = menza
         self.dish = dish
-    
+
     def handleKey(self, char: int) -> HandlerEvent:
         self.win.clear()
         self.win.refresh()
 
         if char in [ord(str(x)) for x in range(1, 6)]:
-            self.repo.send_rating(self.menza, self.dish, char - ord('0'))
-        
+            self.repo.send_rating(self.menza, self.dish, char - ord("0"))
+
         return Nothing()
 
     def draw(self):
@@ -44,12 +48,12 @@ class RatingView(KeyHandler):
 
         _, width = self.size
         name = self.dish.name
-        
+
         if len(name) <= width - 2:
             name = name.center(width - 2)
         else:
-            name = name[:width - 2 - 3] + "..."
-            
+            name = name[: width - 2 - 3] + "..."
+
         win.move(0, 0)
         win.addstr(name)
         win.move(1, 0)

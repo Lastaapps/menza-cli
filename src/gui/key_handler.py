@@ -30,8 +30,10 @@ class OpenImage(HandlerEvent):
 class SwitchToMenu(HandlerEvent):
     ...
 
+
 class SwitchToDish(HandlerEvent):
     ...
+
 
 class SwitchToWeek(HandlerEvent):
     ...

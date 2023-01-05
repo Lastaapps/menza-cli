@@ -4,16 +4,16 @@ from . import util
 from result import Ok, Err
 from src.api.agata_entity import Subsystem
 
+
 def print_info(repo: Repo, subsystem: Subsystem) -> None:
     data = repo.get_complete_info(subsystem)
     match data:
         case Ok(info):
             if len(info.header) != 0:
                 print(info.header, "\n")
-            
+
             if len(info.footer) != 0:
                 print(info.footer, "\n")
-            
 
             for group in info.times.values():
 
@@ -43,13 +43,14 @@ def print_info(repo: Repo, subsystem: Subsystem) -> None:
                     number = f"+420 {n[0:3]} {n[3:6]} {n[6:9]}"
                     print(number)
                 print()
-            
+
             for address in info.addresses:
                 print(address.address)
                 print(address.gps)
 
         case Err(e):
             print(e)
+
 
 def command_info(mocked: bool, phrase: str) -> None:
     repo = di.get_repo(mocked)

@@ -1,12 +1,16 @@
 from .lasta_api import LastaApi
 from .lasta_entity import *
 
-class LastaApiMock(LastaApi):
 
+class LastaApiMock(LastaApi):
     def __init__(self):
         self.data: dict[str, Status] = {}
-        self.data["BUtopenec"] = Status({"id": "BUtopenec", "rateCount": 1, "rating": 4, "soldOutCount": 0})
-        self.data["KUtopenka"] = Status({"id": "KUtopenka", "rateCount": 1, "rating": 3, "soldOutCount": 0})
+        self.data["BUtopenec"] = Status(
+            {"id": "BUtopenec", "rateCount": 1, "rating": 4, "soldOutCount": 0}
+        )
+        self.data["KUtopenka"] = Status(
+            {"id": "KUtopenka", "rateCount": 1, "rating": 3, "soldOutCount": 0}
+        )
 
     def get_status(self) -> list[Status]:
         """Gets the current rating status"""
@@ -21,17 +25,29 @@ class LastaApiMock(LastaApi):
         sold_out = sum([x.sold_out_count for x in self.data.values()])
         statistics = rating_count + sold_out
 
-        return Statistics({"ratings": rating_count, "average": average, "sold_out": sold_out, "statistics_requests": statistics})
+        return Statistics(
+            {
+                "ratings": rating_count,
+                "average": average,
+                "sold_out": sold_out,
+                "statistics_requests": statistics,
+            }
+        )
 
     def post_rating(self, id: str, rating: int) -> list[Status]:
         """Rates a dish with BE id given"""
 
         if id in self.data:
             item = self.data[id]
-            item.rating = round((1.0 * item.rate_count * item.rate_count + rating) / (item.rate_count + 1))
+            item.rating = round(
+                (1.0 * item.rate_count * item.rate_count + rating)
+                / (item.rate_count + 1)
+            )
             item.rate_count += 1
         else:
-            self.data[id] = Status({"id": id, "rateCount": 1, "rating": rating, "soldOutCount": 0})
+            self.data[id] = Status(
+                {"id": id, "rateCount": 1, "rating": rating, "soldOutCount": 0}
+            )
 
         return [x for x in self.data.values()]
 
@@ -41,7 +57,9 @@ class LastaApiMock(LastaApi):
         if id in self.data:
             self.data[id].sold_out_count += 1
         else:
-            self.data[id] = Status({"id": id, "rateCount": 0, "rating": 0, "soldOutCount": 1})
+            self.data[id] = Status(
+                {"id": id, "rateCount": 0, "rating": 0, "soldOutCount": 1}
+            )
 
         return [x for x in self.data.values()]
 

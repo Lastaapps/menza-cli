@@ -28,7 +28,7 @@ class RepoImpl(Repo):
                 self.agata_api.get_sub_systems(),
                 key=lambda s: s.description,
             ),
-            key = lambda x: x.id,
+            key=lambda x: x.id,
         )
 
     def __update_warn(self, dish: Dish) -> Dish:
@@ -48,9 +48,7 @@ class RepoImpl(Repo):
         return out
 
     @as_result(Exception)
-    def get_week_menu(
-        self, system: Subsystem
-    ) -> dict[str, list[DayDish]]:
+    def get_week_menu(self, system: Subsystem) -> dict[str, list[DayDish]]:
         """Get week dish menu in a menza"""
 
         info = self.agata_api.get_week_info(system.id)
@@ -58,7 +56,7 @@ class RepoImpl(Repo):
             return {}
 
         data = self.agata_api.get_day_dish(info[0].id)
-        out : dict[str, list[DayDish]] = {}
+        out: dict[str, list[DayDish]] = {}
 
         for dish in data:
             if dish.date not in out.keys():
@@ -66,7 +64,6 @@ class RepoImpl(Repo):
             out[dish.date].append(dish)
 
         return out
-                
 
     @staticmethod
     def __group_times(times: list[OpenTime]) -> TimeGroup:
