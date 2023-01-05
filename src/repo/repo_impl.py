@@ -3,7 +3,7 @@ from result import as_result
 
 from src.api.agata_api import AgataApi
 from src.api.agata_entity import OpenTime
-from src.api.agata_entity import Subsystem, Dish
+from src.api.agata_entity import Subsystem, Dish, DayDish
 from src.api.lasta_api import LastaApi
 from .repo import Repo, CompleteInfo, TimeGroup, DishRatingMapper
 
@@ -46,6 +46,27 @@ class RepoImpl(Repo):
         for t in types:
             out[t.name] = list(filter(lambda dish: dish.type == t.id, dishes))
         return out
+
+    @as_result(Exception)
+    def get_week_menu(
+        self, system: Subsystem
+    ) -> dict[str, list[DayDish]]:
+        """Get week dish menu in a menza"""
+
+        info = self.agata_api.get_week_info(system.id)
+        if len(info) == 0:
+            return {}
+
+        data = self.agata_api.get_day_dish(info[0].id)
+        out : dict[str, list[DayDish]] = {}
+
+        for dish in data:
+            if dish.date not in out.keys():
+                out[dish.date] = []
+            out[dish.date].append(dish)
+
+        return out
+                
 
     @staticmethod
     def __group_times(times: list[OpenTime]) -> TimeGroup:

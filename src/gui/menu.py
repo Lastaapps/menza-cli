@@ -85,7 +85,7 @@ class Menu(KeyHandler):
         else:
             return Nothing()
 
-    def setFocus(self, focus: bool):
+    def set_focus(self, focus: bool):
         self.focused = focus
         self.__draw_line(self.index)
         self.win.refresh()

@@ -11,6 +11,7 @@ from .key_handler import (
     Nothing,
     OpenImage,
     SwitchToMenu,
+    SwitchToWeek,
 )
 from .rating import RatingView
 
@@ -29,6 +30,7 @@ class DishView(KeyHandler):
 
         self.dish_index = 0
         self.focused = False
+        self.foreground = False
         self.data: dict[str, list[Dish]] = {}
         self.most_allergens = 0
         self.rate_mapper: DishRatingMapper = lambda _, __: (0, 0)
@@ -50,7 +52,7 @@ class DishView(KeyHandler):
 
     #     win.refresh()
 
-    def __get_dish_by_index(self, index: int):
+    def __get_dish_by_index(self, index: int) -> Dish:
         i = 0
         for value in self.data.values():
             for dish in value:
@@ -59,20 +61,20 @@ class DishView(KeyHandler):
                 i += 1
         raise RuntimeError("Index out of bounds for dish: " + str(self.dish_index))
 
-    def __get_selected_dish(self):
+    def __get_selected_dish(self) -> Dish:
         return self.__get_dish_by_index(self.dish_index)
 
-    def __is_dish_selected(self, dish: Dish):
+    def __is_dish_selected(self, dish: Dish) -> bool:
         return self.__get_selected_dish() == dish
 
-    def __dish_count(self):
+    def __dish_count(self) -> int:
         i = 0
         for value in self.data.values():
             for _ in value:
                 i += 1
         return i
 
-    def __select_index(self, new_index: int):
+    def __select_index(self, new_index: int) -> None:
         count = self.__dish_count()
 
         if count == 0:
@@ -91,7 +93,7 @@ class DishView(KeyHandler):
         size = scr.getmaxyx()
         return cr.newwin(size[0] - 4, size[1] - 4, xy[0] + 2, xy[1] + 2)
 
-    def __open_rating(self):
+    def __open_rating(self) -> None:
         y, x = self.win.getbegyx()
         height, width  = self.size
         rating_width = 41
@@ -121,7 +123,7 @@ class DishView(KeyHandler):
             self.__open_rating()
             return Nothing()
 
-        elif char in [ord("j"), cr.KEY_DOWN]:
+        if char in [ord("j"), cr.KEY_DOWN]:
             self.__select_index(self.dish_index + 1)
             return Nothing()
 
@@ -131,6 +133,9 @@ class DishView(KeyHandler):
 
         elif char in [ord("h"), cr.KEY_LEFT]:
             return SwitchToMenu()
+
+        elif char in [ord("w"), cr.KEY_LEFT]:
+            return SwitchToWeek()
 
         # elif char in [ord(' '), ord('\n'), cr.KEY_ENTER]:
         #     self.is_showing_image = False
@@ -215,6 +220,9 @@ class DishView(KeyHandler):
         win.attroff(cr.A_DIM)
 
     def __redraw(self) -> None:
+        if not self.foreground:
+            return
+
         win = self.win
         win.clear()
         data = self.data
@@ -254,8 +262,12 @@ class DishView(KeyHandler):
 
         win.refresh()
 
-    def setFocus(self, focus: bool):
+    def set_focus(self, focus: bool):
         self.focused = focus
+        self.__redraw()
+
+    def set_foreground(self, foreground: bool):
+        self.foreground = foreground
         self.__redraw()
 
     def reset(self):

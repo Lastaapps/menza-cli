@@ -12,6 +12,7 @@ else:
 from src.gui.menu import Menu
 from src.gui.info import Info
 from src.gui.dish import DishView
+from src.gui.week import WeekView
 from src.repo.repo import Repo
 from src.api.agata_entity import Subsystem
 from .key_handler import (
@@ -21,6 +22,7 @@ from .key_handler import (
     LoadMenza,
     OpenImage,
     SwitchToDish,
+    SwitchToWeek,
     SwitchToMenu,
 )
 
@@ -97,6 +99,8 @@ class Main:
         dish_border.refresh()
         dish_scr = Main.__inner_scr(dish_border)
         self.dish_view = DishView(dish_scr, self.repo)
+        week_scr = Main.__inner_scr(dish_border)
+        self.week_view = WeekView(week_scr, self.repo)
 
         # Draw info border
         info_border = cr.newwin(size[0] - 1, INFO_WIDTH, 0, size[1] - INFO_WIDTH)
@@ -129,7 +133,7 @@ class Main:
         match menza_list:
             case Ok(value):
                 menu_view.update_data(value)
-                menu_view.setFocus(True)
+                menu_view.set_focus(True)
                 return True
             case Err(e):
                 self.exit_with_error(e)
@@ -138,14 +142,23 @@ class Main:
     def __load_subsystem(self, subsystem: Subsystem):
 
         dish_view = self.dish_view
+        week_view = self.week_view
         info_view = self.info_view
 
         dish_data = self.repo.get_dish_list(subsystem)
+        week_data = self.repo.get_week_menu(subsystem)
         info_data = self.repo.get_complete_info(subsystem)
 
         match dish_data:
             case Ok(value):
                 dish_view.update_data(subsystem, value)
+            case Err(e):
+                self.exit_with_error(e)
+                return False
+
+        match week_data:
+            case Ok(value):
+                week_view.update_data(subsystem, value)
             case Err(e):
                 self.exit_with_error(e)
                 return False
@@ -174,6 +187,8 @@ class Main:
                     res = self.menu_view.handleKey(char)
                 case HandlerType.DISH:
                     res = self.dish_view.handleKey(char)
+                case HandlerType.WEEK:
+                    res = self.week_view.handleKey(char)
                 case _:
                     raise RuntimeError("Unknown key type: " + str(self.input_state))
 
@@ -182,12 +197,16 @@ class Main:
                 ...
 
             elif isinstance(res, LoadMenza):
-                self.menu_view.setFocus(False)
-                self.dish_view.setFocus(True)
+                self.menu_view.set_focus(False)
+                self.dish_view.set_focus(True)
+                self.week_view.set_focus(False)
                 self.input_state = HandlerType.DISH
                 self.dish_view.reset()
+                self.week_view.reset()
                 if not self.__load_subsystem(res.subsystem):
                     return
+                self.week_view.set_foreground(False)
+                self.dish_view.set_foreground(True)
 
             elif isinstance(res, OpenImage):
                 url = self.repo.get_image_url(res.dish)
@@ -197,14 +216,26 @@ class Main:
                     subprocess.run(["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
             elif isinstance(res, SwitchToMenu):
-                self.menu_view.setFocus(True)
-                self.dish_view.setFocus(False)
+                self.menu_view.set_focus(True)
+                self.dish_view.set_focus(False)
+                self.week_view.set_focus(False)
                 self.input_state = HandlerType.MENU
 
             elif isinstance(res, SwitchToDish):
-                self.menu_view.setFocus(False)
-                self.dish_view.setFocus(True)
+                self.menu_view.set_focus(False)
+                self.dish_view.set_focus(True)
+                self.week_view.set_focus(False)
+                self.week_view.set_foreground(False)
+                self.dish_view.set_foreground(True)
                 self.input_state = HandlerType.DISH
+
+            elif isinstance(res, SwitchToWeek):
+                self.menu_view.set_focus(False)
+                self.dish_view.set_focus(False)
+                self.week_view.set_focus(True)
+                self.dish_view.set_foreground(False)
+                self.week_view.set_foreground(True)
+                self.input_state = HandlerType.WEEK
 
             else:
                 raise RuntimeError(

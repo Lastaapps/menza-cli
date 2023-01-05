@@ -6,6 +6,7 @@ from src.api.agata_entity import Dish, Subsystem
 class HandlerType(Enum):
     MENU = 1
     DISH = 2
+    WEEK = 3
 
 
 class HandlerEvent(metaclass=ABCMeta):
@@ -29,8 +30,10 @@ class OpenImage(HandlerEvent):
 class SwitchToMenu(HandlerEvent):
     ...
 
-
 class SwitchToDish(HandlerEvent):
+    ...
+
+class SwitchToWeek(HandlerEvent):
     ...
 
 

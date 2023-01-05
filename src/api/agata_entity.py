@@ -151,6 +151,7 @@ class WeekInfo(DataClass):
         self.valid_from = str(data["platnost_do"])
         self.valid_to = str(data["platnost_od"])
 
+days_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 class DayDish(DataClass):
     """TDenJidlo"""
@@ -163,3 +164,6 @@ class DayDish(DataClass):
         self.type = int(data["typstravy"])
         self.name = str(data["nazev"])
         self.weight = str(data["vaha"] or "")
+        self.type_name = data["TypStravyNazev"]
+
+        self.day_of_week_name = days_of_week[self.day_of_week]

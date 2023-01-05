@@ -3,7 +3,7 @@ from result import Result
 from typing import Callable
 
 from src.api.agata_entity import Info, OpenTime, Contact, Address
-from src.api.agata_entity import Subsystem, Dish
+from src.api.agata_entity import Subsystem, Dish, DayDish
 
 TimeServingGroup = dict[int, list[OpenTime]]
 TimeGroup = dict[int, TimeServingGroup]
@@ -38,6 +38,13 @@ class Repo(metaclass=ABCMeta):
         self, system: Subsystem
     ) -> Result[dict[str, list[Dish]], Exception]:
         """Get today dish menu in a menza"""
+        pass
+
+    @abstractmethod
+    def get_week_menu(
+        self, system: Subsystem
+    ) -> Result[dict[str, list[DayDish]], Exception]:
+        """Get week dish menu in a menza"""
         pass
 
     @abstractmethod

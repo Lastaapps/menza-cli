@@ -115,10 +115,10 @@ class AgataApiMock(AgataApi):
         """Gets a dish menu for the week id given"""
 
         return [
-            DayDish({"id": 1, "id_week": week_id, "date": "2022-12-24", "day_od_week": "So",  "typstravy": "idk",  "nazev": "Žrádlo 1",  "vaha": "200 g"}),
-            DayDish({"id": 2, "id_week": week_id, "date": "2022-12-24", "day_od_week": "So",  "typstravy": "idk",  "nazev": "Žrádlo 2",  "vaha": "200 g"}),
-            DayDish({"id": 3, "id_week": week_id, "date": "2022-12-24", "day_od_week": "So",  "typstravy": "idk",  "nazev": "Žrádlo 3",  "vaha": "200 g"}),
-            DayDish({"id": 4, "id_week": week_id, "date": "2022-12-24", "day_od_week": "So",  "typstravy": "idk",  "nazev": "Žrádlo 4",  "vaha": "200 g"}),
+            DayDish({"id": 1, "id_tyden": week_id, "datum": "2022-12-23", "den": 4,  "typstravy": 1,  "nazev": "Žrádlo 1",  "vaha": "69 g", "TypStravyNazev": "Polejvka"}),
+            DayDish({"id": 2, "id_tyden": week_id, "datum": "2022-12-23", "den": 4,  "typstravy": 2,  "nazev": "Žrádlo 2",  "vaha": "", "TypStravyNazev": "Nakládka"}),
+            DayDish({"id": 3, "id_tyden": week_id, "datum": "2022-12-24", "den": 5,  "typstravy": 3,  "nazev": "Žrádlo 3",  "vaha": "42 ks", "TypStravyNazev": "Dokrmka"}),
+            DayDish({"id": 4, "id_tyden": week_id, "datum": "2022-12-24", "den": 5,  "typstravy": 4,  "nazev": "Žrádlo 4",  "vaha": "420 ml", "TypStravyNazev": "Dezertér"}),
         ]
 
     def get_image_url(self, subsystem_id: int, name: str) -> str:

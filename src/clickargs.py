@@ -1,6 +1,7 @@
 import click
 from src.cli.list import command_list
 from src.cli.dish import command_dish
+from src.cli.week import command_week
 from src.cli.info import command_info
 from src import di
 
@@ -33,6 +34,13 @@ def dish(ctx: click.Context, name: str):
     mocked : bool = ctx.obj[KEY_MOCK]
     command_dish(mocked, name)
 
+@click.command("week", help = "Show week menu for the menza given")
+@click.argument("name")
+@click.pass_context
+def week(ctx: click.Context, name: str):
+    mocked : bool = ctx.obj[KEY_MOCK]
+    command_week(mocked, name)
+
 @click.command("info", help = "List info about menza given")
 @click.argument("name")
 @click.pass_context
@@ -43,4 +51,5 @@ def info(ctx: click.Context, name: str):
 
 app.add_command(list)
 app.add_command(dish)
+app.add_command(week)
 app.add_command(info)
