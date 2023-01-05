@@ -47,9 +47,9 @@ class DishView(KeyHandler):
     #     match res:
     #         case Ok(value):
     #             win.addstr(value)
-    #         case Err(e):
+    #         case Err(error):
     #             win.addstr("Loading image failed\n")
-    #             win.addstr(str(e))
+    #             win.addstr(str(error))
 
     #     win.refresh()
 

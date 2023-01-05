@@ -43,8 +43,8 @@ class ConfigLoader:
         parser = cp.ConfigParser()
         try:
             parser.read(self.file)
-        except cp.Error as e:
-            return Err(str(e))
+        except cp.Error as error:
+            return Err(str(error))
         except:
             pass
 
@@ -62,8 +62,8 @@ class ConfigLoader:
         match allergens:
             case Ok(value):
                 allergens = value
-            case Err(e):
-                return Err(str(e))
+            case Err(error):
+                return Err(str(error))
 
         return Ok(
             AppConfig(

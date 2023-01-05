@@ -139,8 +139,8 @@ class Main:
                 menu_view.update_data(value)
                 menu_view.set_focus(True)
                 return True
-            case Err(e):
-                self.exit_with_error(e)
+            case Err(error):
+                self.exit_with_error(error)
                 return False
 
     def __load_subsystem(self, subsystem: Subsystem):
@@ -156,22 +156,22 @@ class Main:
         match dish_data:
             case Ok(value):
                 dish_view.update_data(subsystem, value)
-            case Err(e):
-                self.exit_with_error(e)
+            case Err(error):
+                self.exit_with_error(error)
                 return False
 
         match week_data:
             case Ok(value):
                 week_view.update_data(subsystem, value)
-            case Err(e):
-                self.exit_with_error(e)
+            case Err(error):
+                self.exit_with_error(error)
                 return False
 
         match info_data:
             case Ok(value):
                 info_view.update_info(value)
-            case Err(e):
-                self.exit_with_error(e)
+            case Err(error):
+                self.exit_with_error(error)
                 return False
         return True
 

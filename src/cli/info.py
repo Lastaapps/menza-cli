@@ -1,13 +1,36 @@
+"""Handles info cli command"""
+
 from result import Err, Ok
 
 from src import di
 from src.api.agata_entity import Subsystem
-from src.repo.repo import Repo
+from src.repo.repo import Repo, CompleteInfo
 
 from . import util
 
+def print_times(info: CompleteInfo) -> None:
+    """Prints opening times"""
+    for group in info.times.values():
+
+        print(group[0].serving_name)
+
+        for time in group:
+            # pylint: disable=C0103
+            df = time.day_from
+            dt = time.day_to
+            tf = time.time_from.rjust(5)
+            tt = time.time_to.rjust(5)
+            day = df if df == dt or not dt else f"{df} - {dt}"
+            hour = tf if tf == tt or not tt else f"{tf} - {tt}"
+
+            text = f"{day.ljust(7)}  {hour.ljust(13)}  {time.from_desc}"
+            print(text)
+        print()
+
 
 def print_info(repo: Repo, subsystem: Subsystem) -> None:
+    """Print info about the subsystem"""
+
     data = repo.get_complete_info(subsystem)
     match data:
         case Ok(info):
@@ -17,21 +40,7 @@ def print_info(repo: Repo, subsystem: Subsystem) -> None:
             if len(info.footer) != 0:
                 print(info.footer, "\n")
 
-            for group in info.times.values():
-
-                print(group[0].serving_name)
-
-                for time in group:
-                    df = time.day_from
-                    dt = time.day_to
-                    tf = time.time_from.rjust(5)
-                    tt = time.time_to.rjust(5)
-                    day = df if df == dt or not dt else f"{df} - {dt}"
-                    hour = tf if tf == tt or not tt else f"{tf} - {tt}"
-
-                    text = f"{day.ljust(7)}  {hour.ljust(13)}  {time.from_desc}"
-                    print(text)
-                print()
+            print_times(info)
 
             for contact in info.contacts:
                 if contact.role:
@@ -41,8 +50,8 @@ def print_info(repo: Repo, subsystem: Subsystem) -> None:
                 if contact.email:
                     print(contact.email)
                 if contact.phone:
-                    n = contact.phone
-                    number = f"+420 {n[0:3]} {n[3:6]} {n[6:9]}"
+                    number = contact.phone
+                    number = f"+420 {number[0:3]} {number[3:6]} {number[6:9]}"
                     print(number)
                 print()
 
@@ -50,11 +59,14 @@ def print_info(repo: Repo, subsystem: Subsystem) -> None:
                 print(address.address)
                 print(address.gps)
 
-        case Err(e):
-            print(e)
+        case Err(error):
+            print(error)
 
 
 def command_info(mocked: bool, phrase: str) -> None:
+    """Handles info cli command"""
+    # pylint: disable=R0801
+
     repo = di.get_repo(mocked)
     menza = util.find_menza(repo, phrase)
 
@@ -62,5 +74,5 @@ def command_info(mocked: bool, phrase: str) -> None:
         case Ok(value):
             print("Info for " + value.description)
             print_info(repo, value)
-        case Err(e):
-            print(e)
+        case Err(error):
+            print(error)
