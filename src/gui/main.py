@@ -1,29 +1,31 @@
-from typing import TYPE_CHECKING
-from result import Ok, Err
 import curses as cr
-import webbrowser
 import subprocess
+import webbrowser
+from typing import TYPE_CHECKING
+
+from result import Err, Ok
 
 if TYPE_CHECKING:
     from _curses import _CursesWindow as CW
 else:
     from typing import Any as CW
 
-from src.gui.menu import Menu
-from src.gui.info import Info
+from src.api.agata_entity import Subsystem
 from src.gui.dish import DishView
+from src.gui.info import Info
+from src.gui.menu import Menu
 from src.gui.week import WeekView
 from src.repo.repo import Repo
-from src.api.agata_entity import Subsystem
+
 from .key_handler import (
-    HandlerType,
     HandlerEvent,
-    Nothing,
+    HandlerType,
     LoadMenza,
+    Nothing,
     OpenImage,
     SwitchToDish,
-    SwitchToWeek,
     SwitchToMenu,
+    SwitchToWeek,
 )
 
 MENU_WIDTH = 32

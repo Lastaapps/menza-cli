@@ -1,14 +1,13 @@
-from src.repo.repo import Repo
-from src.repo.repo_impl import RepoImpl
 from src.api.agata_api import AgataApi
 from src.api.agata_api_impl import AgataApiImpl
 from src.api.agata_api_mock import AgataApiMock
 from src.api.lasta_api import LastaApi
 from src.api.lasta_api_impl import LastaApiImpl
 from src.api.lasta_api_mock import LastaApiMock
-from src.gui.main import Main
-
 from src.config import AppConfig
+from src.gui.main import Main
+from src.repo.repo import Repo
+from src.repo.repo_impl import RepoImpl
 
 __config: AppConfig
 

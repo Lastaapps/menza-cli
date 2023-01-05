@@ -1,20 +1,21 @@
-from typing import Optional, Any
+from typing import Any, Optional
+
 import requests
 
+from .agata_api import AgataApi
 from .agata_entity import (
-    DishList,
-    Subsystem,
-    ServingPlace,
-    DishType,
+    Address,
+    Contact,
+    DayDish,
     Dish,
+    DishList,
+    DishType,
     Info,
     OpenTime,
-    Contact,
-    Address,
+    ServingPlace,
+    Subsystem,
     WeekInfo,
-    DayDish,
 )
-from .agata_api import AgataApi
 
 
 class AgataApiImpl(AgataApi):

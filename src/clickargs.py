@@ -1,9 +1,10 @@
 import click
-from src.cli.list import command_list
-from src.cli.dish import command_dish
-from src.cli.week import command_week
-from src.cli.info import command_info
+
 from src import di
+from src.cli.dish import command_dish
+from src.cli.info import command_info
+from src.cli.list import command_list
+from src.cli.week import command_week
 
 # Python je sra*ka
 

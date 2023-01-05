@@ -1,10 +1,11 @@
-from typing import TYPE_CHECKING
 import curses as cr
+from typing import TYPE_CHECKING
 
 from result import Err, Ok
 
 from src.api.agata_entity import Dish, Subsystem
 from src.repo.repo import DishRatingMapper, Repo
+
 from .key_handler import (
     HandlerEvent,
     KeyHandler,

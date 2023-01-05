@@ -1,6 +1,7 @@
-from src.repo.repo import Repo
-from result import Result, Ok, Err
+from result import Err, Ok, Result
+
 from src.api.agata_entity import Subsystem
+from src.repo.repo import Repo
 
 
 def find_menza(repo: Repo, phrase: str) -> Result[Subsystem, Exception]:

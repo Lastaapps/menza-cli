@@ -1,14 +1,16 @@
+import curses as cr
 from typing import TYPE_CHECKING
+
 from src.api.agata_entity import Subsystem
+
 from .key_handler import (
     HandlerEvent,
-    KeyHandler,
     HandlerType,
+    KeyHandler,
     LoadMenza,
     Nothing,
     SwitchToDish,
 )
-import curses as cr
 
 if TYPE_CHECKING:
     from _curses import _CursesWindow as CW

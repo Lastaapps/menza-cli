@@ -1,8 +1,10 @@
+from result import Err, Ok
+
 from src import di
-from . import util
-from src.repo.repo import Repo
-from result import Ok, Err
 from src.api.agata_entity import Subsystem
+from src.repo.repo import Repo
+
+from . import util
 
 
 def print_dish_list(repo: Repo, subsystem: Subsystem) -> None:

@@ -1,7 +1,8 @@
+import base64
 from typing import Any
+
 import requests
 from cryptography.hazmat.primitives import hashes
-import base64
 
 from .lasta_api import LastaApi
 from .lasta_entity import *

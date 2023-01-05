@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from enum import Enum
+
 from src.api.agata_entity import Dish, Subsystem
 
 

@@ -1,5 +1,6 @@
+from result import Err, Ok
+
 from src import di
-from result import Ok, Err
 
 
 def command_list(mocked: bool):

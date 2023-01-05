@@ -1,15 +1,11 @@
 from typing import TYPE_CHECKING
 
 from result import Err, Ok
+
+from src.api.agata_entity import Dish, Subsystem
 from src.repo.repo import Repo
-from src.api.agata_entity import Subsystem, Dish
-from .key_handler import (
-    HandlerEvent,
-    KeyHandler,
-    Nothing,
-    OpenImage,
-    SwitchToMenu,
-)
+
+from .key_handler import HandlerEvent, KeyHandler, Nothing, OpenImage, SwitchToMenu
 
 if TYPE_CHECKING:
     from _curses import _CursesWindow as CW

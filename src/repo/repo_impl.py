@@ -2,10 +2,10 @@ import ascii_magic
 from result import as_result
 
 from src.api.agata_api import AgataApi
-from src.api.agata_entity import OpenTime
-from src.api.agata_entity import Subsystem, Dish, DayDish
+from src.api.agata_entity import DayDish, Dish, OpenTime, Subsystem
 from src.api.lasta_api import LastaApi
-from .repo import Repo, CompleteInfo, TimeGroup, DishRatingMapper
+
+from .repo import CompleteInfo, DishRatingMapper, Repo, TimeGroup
 
 
 class RepoImpl(Repo):

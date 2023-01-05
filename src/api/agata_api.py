@@ -1,17 +1,17 @@
 from abc import ABCMeta, abstractmethod
 
 from .agata_entity import (
-    DishList,
-    Subsystem,
-    ServingPlace,
-    DishType,
+    Address,
+    Contact,
+    DayDish,
     Dish,
+    DishList,
+    DishType,
     Info,
     OpenTime,
-    Contact,
-    Address,
+    ServingPlace,
+    Subsystem,
     WeekInfo,
-    DayDish,
 )
 
 

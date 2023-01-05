@@ -1,9 +1,17 @@
 from abc import ABCMeta, abstractmethod
-from result import Result
 from typing import Callable
 
-from src.api.agata_entity import Info, OpenTime, Contact, Address
-from src.api.agata_entity import Subsystem, Dish, DayDish
+from result import Result
+
+from src.api.agata_entity import (
+    Address,
+    Contact,
+    DayDish,
+    Dish,
+    Info,
+    OpenTime,
+    Subsystem,
+)
 
 TimeServingGroup = dict[int, list[OpenTime]]
 TimeGroup = dict[int, TimeServingGroup]

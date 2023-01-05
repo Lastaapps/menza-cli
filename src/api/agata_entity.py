@@ -3,8 +3,8 @@ Doc available at
 https://agata-new.suz.cvut.cz/jidelnicky/JAPI/JAPI-popis.html
 """
 
-from typing import Any
 import re
+from typing import Any
 
 
 class DataClass:

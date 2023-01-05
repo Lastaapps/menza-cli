@@ -1,5 +1,6 @@
-from result import Result, Ok, Err, as_result
 import configparser as cp
+
+from result import Err, Ok, Result, as_result
 
 config_file = "menza.conf"
 

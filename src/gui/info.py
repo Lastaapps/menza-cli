@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
+
 from src.repo.repo import CompleteInfo
 
 if TYPE_CHECKING:
-    from _curses import _CursesWindow as CW, error as crerror
+    from _curses import _CursesWindow as CW
+    from _curses import error as crerror
 else:
     from typing import Any as CW
 

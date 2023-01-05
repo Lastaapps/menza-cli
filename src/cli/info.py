@@ -1,8 +1,10 @@
+from result import Err, Ok
+
 from src import di
-from src.repo.repo import Repo
-from . import util
-from result import Ok, Err
 from src.api.agata_entity import Subsystem
+from src.repo.repo import Repo
+
+from . import util
 
 
 def print_info(repo: Repo, subsystem: Subsystem) -> None:
