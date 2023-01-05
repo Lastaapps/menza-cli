@@ -1,14 +1,19 @@
+"""Implementation for data flow management"""
+
 import ascii_magic
 from result import as_result
 
 from src.api.agata_api import AgataApi
 from src.api.agata_entity import DayDish, Dish, OpenTime, Subsystem
 from src.api.lasta_api import LastaApi
+from src.api.lasta_entity import Status
 
 from .repo import CompleteInfo, DishRatingMapper, Repo, TimeGroup
 
 
 class RepoImpl(Repo):
+    """Implementation for data flow management"""
+
     def __init__(
         self,
         agata_api: AgataApi,
@@ -18,6 +23,8 @@ class RepoImpl(Repo):
         self.agata_api = agata_api
         self.lasta_api = lasta_api
         self.allergens = allergens
+
+        self.rating_list: list[Status]
 
     @as_result(Exception)
     def get_menza_list(self) -> list[Subsystem]:
@@ -43,8 +50,11 @@ class RepoImpl(Repo):
         dishes = self.agata_api.get_dishes(system.id)
         dishes = list(map(self.__update_warn, dishes))
         out: dict[str, list[Dish]] = {}
-        for t in types:
-            out[t.name] = list(filter(lambda dish: dish.type == t.id, dishes))
+        for dish_type in types:
+            # pylint: disable=W0640
+            out[dish_type.name] = list(
+                filter(lambda dish: dish.type == dish_type.id, dishes)
+            )
         return out
 
     @as_result(Exception)
@@ -59,7 +69,7 @@ class RepoImpl(Repo):
         out: dict[str, list[DayDish]] = {}
 
         for dish in data:
-            if dish.date not in out.keys():
+            if dish.date not in out:
                 out[dish.date] = []
             out[dish.date].append(dish)
 
@@ -113,14 +123,14 @@ class RepoImpl(Repo):
 
         self.rating_list = self.lasta_api.get_status()
 
-        def ratingProvider(subsystem: Subsystem, dish: Dish) -> tuple[float, int]:
-            id = self.lasta_api.dish_id(subsystem.description, dish.complete)
+        def rating_provider(subsystem: Subsystem, dish: Dish) -> tuple[float, int]:
+            dish_id = self.lasta_api.dish_id(subsystem.description, dish.complete)
             return next(
-                ((x.rating, x.rate_count) for x in self.rating_list if x.id == id),
+                ((x.rating, x.rate_count) for x in self.rating_list if x.id == dish_id),
                 (0, 0),
             )
 
-        return ratingProvider
+        return rating_provider
 
     @as_result(Exception)
     def get_image(self, dish: Dish, width: int, height: int) -> str:
@@ -136,10 +146,10 @@ class RepoImpl(Repo):
         if len(lines) >= height:
             diff = height - len(lines)
             return "\n".join(lines[diff // 2 : height - diff // 2])
-        else:
-            diff = len(lines) - height
-            l = [""] * (diff // 2) + lines + [""] * (diff // 2)
-            return "\n".join(l)
+
+        diff = len(lines) - height
+        listus = [""] * (diff // 2) + lines + [""] * (diff // 2)
+        return "\n".join(listus)
 
     def get_image_url(self, dish: Dish) -> str | None:
         """Gets image web url"""
@@ -149,5 +159,5 @@ class RepoImpl(Repo):
 
     @as_result(Exception)
     def send_rating(self, subsystem: Subsystem, dish: Dish, rating: int) -> None:
-        id = self.lasta_api.dish_id(subsystem.description, dish.complete)
-        self.rating_list = self.lasta_api.post_rating(id, rating)
+        dish_id = self.lasta_api.dish_id(subsystem.description, dish.complete)
+        self.rating_list = self.lasta_api.post_rating(dish_id, rating)
