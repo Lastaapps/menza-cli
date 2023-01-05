@@ -45,7 +45,6 @@ To just get basic overview of one specific system, you can use a command in the 
 The first 3 output data in Tab separated format, so they can be used by CLI filters.
 
 Last 3 expect a cafeteria id (run the `list` command) or name, at least partially - the first system that matches gets used.
-
 So to view a menu in the Strahov cafeteria, you can run any of these:
 - `./menza.py dish 1`
 - `./menza.py dish Strahov`

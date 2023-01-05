@@ -38,7 +38,7 @@ def command_dish(mocked: bool, phrase: str) -> None:
 
     match menza:
         case Ok(value):
-            print("Menu for " + value.description)
+            print(value.description)
             print_dish_list(repo, value)
         case Err(error):
             print(error)

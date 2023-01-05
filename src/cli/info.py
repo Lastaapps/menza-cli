@@ -75,7 +75,7 @@ def command_info(mocked: bool, phrase: str) -> None:
 
     match menza:
         case Ok(value):
-            print("Info for " + value.description)
+            print(value.description)
             print_info(repo, value)
         case Err(error):
             print(error)

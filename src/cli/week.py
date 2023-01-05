@@ -31,7 +31,7 @@ def command_week(mocked: bool, phrase: str) -> None:
 
     match menza:
         case Ok(value):
-            print("Week menu for " + value.description)
+            print(value.description)
             print_dish_list(repo, value)
         case Err(error):
             print(error)
