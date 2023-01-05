@@ -2,24 +2,17 @@ import ascii_magic
 from result import as_result
 
 from src.api.agata_api import AgataApi
-from src.api.agata_api_impl import AgataApiImpl
-from src.api.agata_api_mock import AgataApiMock
 from src.api.agata_entity import OpenTime
 from src.api.agata_entity import Subsystem, Dish
 from src.api.lasta_api import LastaApi
-from src.api.lasta_api_impl import LastaApiImpl
-from src.api.lasta_api_mock import LastaApiMock
-from src.api.lasta_entity import Status
 from .repo import Repo, CompleteInfo, TimeGroup, DishRatingMapper
 
 
 class RepoImpl(Repo):
     def __init__(
         self,
-        agata_api: AgataApi = AgataApiImpl(),
-        lasta_api: LastaApi = LastaApiImpl(),
-        # agata_api: AgataApi = AgataApiMock(),
-        # lasta_api: LastaApi = LastaApiMock(),
+        agata_api: AgataApi,
+        lasta_api: LastaApi,
     ):
         self.agata_api = agata_api
         self.lasta_api = lasta_api
@@ -28,7 +21,13 @@ class RepoImpl(Repo):
     def get_menza_list(self) -> list[Subsystem]:
         """Gets list of all the CTU menzas"""
 
-        return sorted(self.agata_api.get_sub_systems(), key=lambda s: s.description)
+        return sorted(
+            sorted(
+                self.agata_api.get_sub_systems(),
+                key=lambda s: s.description,
+            ),
+            key = lambda x: x.id,
+        )
 
     @as_result(Exception)
     def get_dish_list(self, system: Subsystem) -> dict[str, list[Dish]]:

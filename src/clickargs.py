@@ -1,5 +1,8 @@
 import click
-from src.gui.main import Main
+from src.cli.list import command_list
+from src.cli.dish import command_dish
+from src.cli.info import command_info
+from src import di
 
 # Python je sra*ka
 
@@ -11,7 +14,7 @@ KEY_MOCK = "mocked"
 def app(ctx : click.Context, mocked: bool):
     if ctx.invoked_subcommand is None:
         # Start interactive
-        Main().start_app()
+        di.get_main_gui(mocked).start_app()
     else:
         # Started command
         ctx.ensure_object(dict)
@@ -21,23 +24,22 @@ def app(ctx : click.Context, mocked: bool):
 @click.pass_context
 def list(ctx: click.Context):
     mocked : bool = ctx.obj[KEY_MOCK]
-    pass
+    command_list(mocked)
 
 @click.command("dish", help = "Show menu for the menza given")
 @click.argument("name")
 @click.pass_context
 def dish(ctx: click.Context, name: str):
     mocked : bool = ctx.obj[KEY_MOCK]
-    click.echo("Param: " + name)
-    pass
+    command_dish(mocked, name)
 
 @click.command("info", help = "List info about menza given")
 @click.argument("name")
 @click.pass_context
 def info(ctx: click.Context, name: str):
     mocked : bool = ctx.obj[KEY_MOCK]
-    click.echo("Param: " + name)
-    pass
+    command_info(mocked, name)
+    
 
 app.add_command(list)
 app.add_command(dish)

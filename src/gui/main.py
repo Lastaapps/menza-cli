@@ -13,7 +13,6 @@ from src.gui.menu import Menu
 from src.gui.info import Info
 from src.gui.dish import DishView
 from src.repo.repo import Repo
-from src.repo.repo_impl import RepoImpl
 from src.api.agata_entity import Subsystem
 from .key_handler import (
     HandlerType,
@@ -32,7 +31,7 @@ MIN_TERM_HEIGHT = 42
 
 
 class Main:
-    def __init__(self, repo: Repo = RepoImpl()):
+    def __init__(self, repo: Repo):
         self.repo = repo
         self.input_state = HandlerType.MENU
 
