@@ -54,7 +54,7 @@ class AgataApiImpl(AgataApi):
     def __parse_response_body(self, url: str) -> Any:
         """Decodes resulting JSON"""
 
-        response: requests.Response = requests.get(url,timeout = 10)
+        response: requests.Response = requests.get(url, timeout=10)
         return response.json()
 
     def get_dish_list(self) -> list[DishList]:

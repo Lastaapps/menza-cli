@@ -8,6 +8,7 @@ from typing import Any
 
 class DataClass:
     """Defines common toString() method"""
+
     def __str__(self):
         return str(self.__dict__)
 

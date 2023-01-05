@@ -18,5 +18,5 @@ disable=
 
 [BASIC]
 
-good-names=id
+good-names=id, i, j, x, y,
 

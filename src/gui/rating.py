@@ -1,11 +1,11 @@
-from typing import TYPE_CHECKING
+"""Rating dialog"""
 
-from result import Err, Ok
+from typing import TYPE_CHECKING
 
 from src.api.agata_entity import Dish, Subsystem
 from src.repo.repo import Repo
 
-from .key_handler import HandlerEvent, KeyHandler, Nothing, OpenImage, SwitchToMenu
+from .key_handler import HandlerEvent, KeyHandler, Nothing
 
 if TYPE_CHECKING:
     from _curses import _CursesWindow as CW
@@ -14,6 +14,8 @@ else:
 
 
 class RatingView(KeyHandler):
+    """Rating dialog"""
+
     def __init__(
         self,
         scr: CW,
@@ -21,6 +23,8 @@ class RatingView(KeyHandler):
         menza: Subsystem,
         dish: Dish,
     ):
+        # pylint: disable=E0601
+
         self.size = scr.getmaxyx()
         self.win = scr
         self.repo = repo
@@ -29,9 +33,15 @@ class RatingView(KeyHandler):
         self.menza = menza
         self.dish = dish
 
-    def handleKey(self, char: int) -> HandlerEvent:
-        self.win.clear()
-        self.win.refresh()
+    def handle_key(self, char: int) -> HandlerEvent:
+        """Handles user input - just 1 key press"""
+
+        _, width = self.size
+        win = self.win
+        win.clear()
+        win.move(1, 0)
+        win.addstr("Working on it...".center(width - 2))
+        win.refresh()
 
         if char in [ord(str(x)) for x in range(1, 6)]:
             self.repo.send_rating(self.menza, self.dish, char - ord("0"))
@@ -39,6 +49,8 @@ class RatingView(KeyHandler):
         return Nothing()
 
     def draw(self):
+        """Redraws itself"""
+
         win = self.win
         win.clear()
 

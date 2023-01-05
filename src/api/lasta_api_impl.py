@@ -7,7 +7,7 @@ import requests
 from cryptography.hazmat.primitives import hashes
 
 from .lasta_api import LastaApi
-from .lasta_entity import Rate, Status, Statistics, Soldout
+from .lasta_entity import Rate, Soldout, Statistics, Status
 
 
 class LastaApiImpl(LastaApi):
@@ -28,7 +28,9 @@ class LastaApiImpl(LastaApi):
         headers = {"X-Api-Key": self.api_key}
 
         response: requests.Response = requests.get(
-            self.__build_url(path), headers=headers, timeout= 5,
+            self.__build_url(path),
+            headers=headers,
+            timeout=5,
         )
 
         return response.json()
@@ -39,7 +41,10 @@ class LastaApiImpl(LastaApi):
         headers = {"X-Api-Key": self.api_key}
 
         response: requests.Response = requests.post(
-            self.__build_url(path), json=data.__dict__, headers=headers, timeout= 5,
+            self.__build_url(path),
+            json=data.__dict__,
+            headers=headers,
+            timeout=5,
         )
 
         return response.json()

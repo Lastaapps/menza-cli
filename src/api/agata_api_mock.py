@@ -17,6 +17,7 @@ from .agata_entity import (
     WeekInfo,
 )
 
+
 class AgataApiMock(AgataApi):
     """Agata api used for testing"""
 

@@ -1,19 +1,17 @@
+"""The main gui handler"""
+
 import curses as cr
-import subprocess
+
+# import subprocess
 import webbrowser
 from typing import TYPE_CHECKING
 
 from result import Err, Ok
 
-if TYPE_CHECKING:
-    from _curses import _CursesWindow as CW
-else:
-    from typing import Any as CW
-
 from src.api.agata_entity import Subsystem
 from src.gui.dish import DishView
-from src.gui.info import Info
-from src.gui.menu import Menu
+from src.gui.info import InfoView
+from src.gui.menu import MenuView
 from src.gui.week import WeekView
 from src.repo.repo import Repo
 
@@ -28,6 +26,11 @@ from .key_handler import (
     SwitchToWeek,
 )
 
+if TYPE_CHECKING:
+    from _curses import _CursesWindow as CW
+else:
+    from typing import Any as CW
+
 MENU_WIDTH = 32
 INFO_WIDTH = 40
 MIN_TERM_WIDTH = 150
@@ -35,17 +38,27 @@ MIN_TERM_HEIGHT = 42
 
 
 class Main:
+    """The main gui handler"""
+
     def __init__(self, repo: Repo):
         self.repo = repo
         self.input_state = HandlerType.MENU
 
+        self.stdscr: CW
+        self.menu_view: MenuView
+        self.dish_view: DishView
+        self.week_view: WeekView
+        self.info_view: InfoView
+
     def exit_courses(self):
+        """Exits ncurses"""
         cr.nocbreak()
         cr.echo()
         cr.endwin()
         self.stdscr.keypad(False)
 
     def exit_with_message(self, message: str):
+        """Shows an error message, awaits key press and exits"""
         stdscr = self.stdscr
         stdscr.clear()
 
@@ -59,6 +72,7 @@ class Main:
         stdscr.getch()
 
     def exit_with_error(self, error: Exception):
+        """Shows an error message, awaits key press and exits"""
         stdscr = self.stdscr
         stdscr.clear()
 
@@ -73,11 +87,16 @@ class Main:
 
     @staticmethod
     def __inner_scr(scr: CW) -> CW:
-        xy = scr.getbegyx()
+        """Creates a screen inside another (pads borders)"""
+        # pylint: disable=E0601
+
+        origin = scr.getbegyx()
         size = scr.getmaxyx()
-        return cr.newwin(size[0] - 4, size[1] - 4, xy[0] + 2, xy[1] + 2)
+        return cr.newwin(size[0] - 4, size[1] - 4, origin[0] + 2, origin[1] + 2)
 
     def __layout_screen(self, stdscr: CW):
+        """Lays all the view on screen"""
+
         cr.noecho()
         cr.cbreak()
         cr.curs_set(0)
@@ -91,12 +110,12 @@ class Main:
         menu_border.addstr(0, 3, "CTU Menzas")
         menu_border.refresh()
         menu_scr = Main.__inner_scr(menu_border)
-        self.menu_view = Menu(menu_scr)
+        self.menu_view = MenuView(menu_scr)
 
         # Draw dish list border
         dish_width = size[1] - MENU_WIDTH - INFO_WIDTH
         dish_border = cr.newwin(size[0] - 1, dish_width, 0, MENU_WIDTH)
-        dish_border.border()  # TODO add pretty corners
+        dish_border.border()
         dish_border.addstr(0, 3, "Dish list")
         dish_border.refresh()
         dish_scr = Main.__inner_scr(dish_border)
@@ -111,17 +130,21 @@ class Main:
         info_border.addstr(0, 3, "Info")
         info_border.refresh()
         info_scr = Main.__inner_scr(info_border)
-        self.info_view = Info(info_scr)
+        self.info_view = InfoView(info_scr)
 
         stdscr.move(size[0] - 1, 0)
         stdscr.addstr(
-            "Developed by Lasta Apps (Petr Laštovička) in 2022. Monty Pythons are great, Python not so much."
+            "Developed by Lasta Apps (Petr Laštovička) in 2022."
+            + " "
+            + "Monty Pythons are great, Python not so much."
         )
         github = "https://github.com/Lastaapps/menza-cli"
         stdscr.move(size[0] - 1, size[1] - 1 - len(github))
         stdscr.addstr(github)
 
     def __setup_rating(self):
+        """Sets rating up"""
+
         rating = self.repo.get_rating()
         match rating:
             case Ok(value):
@@ -130,6 +153,7 @@ class Main:
                 pass
 
     def __setup_subsystems(self):
+        """Loads the menza list"""
 
         menza_list = self.repo.get_menza_list()
         menu_view = self.menu_view
@@ -144,6 +168,7 @@ class Main:
                 return False
 
     def __load_subsystem(self, subsystem: Subsystem):
+        """Loads data for the subsystem given"""
 
         dish_view = self.dish_view
         week_view = self.week_view
@@ -175,30 +200,34 @@ class Main:
                 return False
         return True
 
-    def __handleInput(self) -> None:
+    def __handle_input(self) -> None:
+        """Handles a key input, delegates it to the current view"""
+
         stdscr = self.stdscr
+
         while True:
             char = stdscr.getch()
 
             if char == cr.ERR:
                 continue
-            elif char in (ord("q"), 27):
+
+            if char in (ord("q"), 27):
                 return
 
             res: HandlerEvent
             match self.input_state:
                 case HandlerType.MENU:
-                    res = self.menu_view.handleKey(char)
+                    res = self.menu_view.handle_key(char)
                 case HandlerType.DISH:
-                    res = self.dish_view.handleKey(char)
+                    res = self.dish_view.handle_key(char)
                 case HandlerType.WEEK:
-                    res = self.week_view.handleKey(char)
+                    res = self.week_view.handle_key(char)
                 case _:
                     raise RuntimeError("Unknown key type: " + str(self.input_state))
 
             # matching handling result
             if isinstance(res, Nothing):
-                ...
+                pass
 
             elif isinstance(res, LoadMenza):
                 self.menu_view.set_focus(False)
@@ -216,12 +245,12 @@ class Main:
                 url = self.repo.get_image_url(res.dish)
                 if isinstance(url, str):
                     # Opens tab twice for some reasong
-                    # webbrowser.open_new_tab(url)
-                    subprocess.run(
-                        ["xdg-open", url],
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL,
-                    )
+                    webbrowser.open_new_tab(url)
+                    # subprocess.run(
+                    #     ["xdg-open", url],
+                    #     stdout=subprocess.DEVNULL,
+                    #     stderr=subprocess.DEVNULL,
+                    # )
 
             elif isinstance(res, SwitchToMenu):
                 self.menu_view.set_focus(True)
@@ -251,6 +280,8 @@ class Main:
                 )
 
     def __run(self, stdscr: CW):
+        """Prepares all the bits"""
+
         self.stdscr = stdscr
         stdscr.refresh()
 
@@ -276,9 +307,10 @@ class Main:
         self.__setup_rating()  # may fail, not a huge problem
 
         # handle keyboard
-        self.__handleInput()
+        self.__handle_input()
 
         self.exit_courses()
 
     def start_app(self):
+        """Starts ncurses wrapper and the whole app"""
         cr.wrapper(self.__run)

@@ -2,7 +2,7 @@
 
 from abc import ABCMeta, abstractmethod
 
-from .lasta_entity import Status, Statistics
+from .lasta_entity import Statistics, Status
 
 
 class LastaApi(metaclass=ABCMeta):

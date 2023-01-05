@@ -1,7 +1,7 @@
 """Testing implementation of rating api"""
 
 from .lasta_api import LastaApi
-from .lasta_entity import Status, Statistics
+from .lasta_entity import Statistics, Status
 
 
 class LastaApiMock(LastaApi):

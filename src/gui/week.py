@@ -1,34 +1,35 @@
+"""Shows week dish menu"""
+# Duplicates with dish.py - I want them to have the logic separated
+# pylint: disable=R0801
+
 import curses as cr
 from typing import TYPE_CHECKING
 
-from result import Err, Ok
-
 from src.api.agata_entity import DayDish, Subsystem
-from src.repo.repo import DishRatingMapper, Repo
+from src.repo.repo import Repo
 
-from .key_handler import (
-    HandlerEvent,
-    KeyHandler,
-    Nothing,
-    OpenImage,
-    SwitchToDish,
-    SwitchToMenu,
-)
-from .rating import RatingView
+from .key_handler import HandlerEvent, KeyHandler, Nothing, SwitchToDish, SwitchToMenu
 
 if TYPE_CHECKING:
     from _curses import _CursesWindow as CW
 else:
     from typing import Any as CW
 
+COL_SPACING = 3
+
 
 class WeekView(KeyHandler):
+    """Shows week dish menu"""
+
     def __init__(self, scr: CW, repo: Repo):
+        # pylint: disable=E0601
+
         self.size = scr.getmaxyx()
         self.win = scr
         self.repo = repo
         scr.refresh()
 
+        self.subsystem: Subsystem
         self.dish_index = 0
         self.focused = False
         self.foreground = False
@@ -36,6 +37,8 @@ class WeekView(KeyHandler):
         self.longest_type_name = 0
 
     def __get_dish_by_index(self, index: int) -> DayDish:
+        """Gets a dish by it's index"""
+
         i = 0
         for value in self.data.values():
             for dish in value:
@@ -45,12 +48,18 @@ class WeekView(KeyHandler):
         raise RuntimeError("Index out of bounds for dish: " + str(self.dish_index))
 
     def __get_selected_dish(self) -> DayDish:
+        """Gets the currently selected dish"""
+
         return self.__get_dish_by_index(self.dish_index)
 
     def __is_dish_selected(self, dish: DayDish) -> bool:
+        """Checks if the dish is selected"""
+
         return self.__get_selected_dish() == dish
 
     def __dish_count(self) -> int:
+        """Gets the dish count"""
+
         i = 0
         for value in self.data.values():
             for _ in value:
@@ -58,6 +67,8 @@ class WeekView(KeyHandler):
         return i
 
     def __select_index(self, new_index: int) -> None:
+        """Selects a dish on the index given"""
+
         count = self.__dish_count()
 
         if count == 0:
@@ -70,35 +81,38 @@ class WeekView(KeyHandler):
         self.dish_index = new_index
         self.__redraw()
 
-    def handleKey(self, char: int) -> HandlerEvent:
+    def handle_key(self, char: int) -> HandlerEvent:
+        """Handles keyboard input"""
 
         if char in [ord("j"), cr.KEY_DOWN]:
             self.__select_index(self.dish_index + 1)
             return Nothing()
 
-        elif char in [ord("k"), cr.KEY_UP]:
+        if char in [ord("k"), cr.KEY_UP]:
             self.__select_index(self.dish_index - 1)
             return Nothing()
 
-        elif char in [ord("h"), cr.KEY_LEFT]:
+        if char in [ord("h"), cr.KEY_LEFT]:
             return SwitchToMenu()
 
-        elif char in [ord("w"), cr.KEY_LEFT]:
+        if char in [ord("w"), cr.KEY_LEFT]:
             return SwitchToDish()
 
-        else:
-            return Nothing()
+        return Nothing()
 
     def __print_header(self, y: int, label: str) -> None:
+        """Prints date and day of week"""
+
         win = self.win
         win.attron(cr.A_UNDERLINE)
         win.addstr(y, 0, label)
         win.attroff(cr.A_UNDERLINE)
 
     def __print_dish(self, y: int, dish: DayDish, selected: bool) -> None:
+        """Prints one line of the menu"""
+
         win = self.win
 
-        COL_SPACING = 3
         space = " " * COL_SPACING
 
         name_width = win.getmaxyx()[1] - 3  # offset
@@ -134,6 +148,8 @@ class WeekView(KeyHandler):
         win.attroff(cr.A_REVERSE)
 
     def __redraw(self) -> None:
+        """Redraws the whole view"""
+
         if not self.foreground:
             return
 
@@ -178,14 +194,19 @@ class WeekView(KeyHandler):
         win.refresh()
 
     def set_focus(self, focus: bool):
+        """Sets the view in the focus - the selected item is bold"""
+
         self.focused = focus
         self.__redraw()
 
     def set_foreground(self, foreground: bool):
+        """Puts the view in foreground - it can be redrawn"""
         self.foreground = foreground
         self.__redraw()
 
     def reset(self):
+        """Resets the internal state"""
+
         self.data = {}
         self.dish_index = 0
         win = self.win
@@ -194,6 +215,8 @@ class WeekView(KeyHandler):
         win.refresh()
 
     def update_data(self, subsystem: Subsystem, data: dict[str, list[DayDish]]) -> None:
+        """Updates itself with new data and redraws"""
+
         self.subsystem = subsystem
         self.data = data
         self.__redraw()

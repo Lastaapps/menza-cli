@@ -9,6 +9,7 @@ from typing import Any
 
 class DataClass:
     """Defines toString() method for it's ancestors"""
+
     def __str__(self):
         return str(self.__dict__)
 

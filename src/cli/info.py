@@ -4,9 +4,10 @@ from result import Err, Ok
 
 from src import di
 from src.api.agata_entity import Subsystem
-from src.repo.repo import Repo, CompleteInfo
+from src.repo.repo import CompleteInfo, Repo
 
 from . import util
+
 
 def print_times(info: CompleteInfo) -> None:
     """Prints opening times"""
