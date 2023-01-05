@@ -1,3 +1,5 @@
+"""Loads data from agata api"""
+
 from typing import Any, Optional
 
 import requests
@@ -19,6 +21,8 @@ from .agata_entity import (
 
 
 class AgataApiImpl(AgataApi):
+    """Loads data from agata api"""
+
     def __init__(
         self,
         base_url: str,
@@ -35,23 +39,23 @@ class AgataApiImpl(AgataApi):
         self,
         function: str,
         subsystem: Optional[int] = None,
-        secondId: Optional[int] = None,
+        second_id: Optional[int] = None,
     ) -> str:
         """Builds request URL"""
 
         url: str = self.base_url + self.api_path + "?api=" + self.api_key
         url += "&Funkce=" + function
-        if subsystem != None:
+        if subsystem is not None:
             url += "&Podsystem=" + str(subsystem)
-        if secondId != None:
-            url += "&SecondID=" + str(secondId)
+        if second_id is not None:
+            url += "&SecondID=" + str(second_id)
         return url
 
     def __parse_response_body(self, url: str) -> Any:
         """Decodes resulting JSON"""
 
-        r: requests.Response = requests.get(url)
-        return r.json()
+        response: requests.Response = requests.get(url,timeout = 10)
+        return response.json()
 
     def get_dish_list(self) -> list[DishList]:
         """Returns list of dish"""
@@ -65,7 +69,7 @@ class AgataApiImpl(AgataApi):
         """Gets subsystems"""
 
         data: list[dict[str, Any]] = (
-            self.__parse_response_body(self.__build_url("GetPodsystemy", secondId=1))
+            self.__parse_response_body(self.__build_url("GetPodsystemy", second_id=1))
             or []
         )
         return [Subsystem(x) for x in data]
@@ -144,7 +148,7 @@ class AgataApiImpl(AgataApi):
 
         data: list[dict[str, Any]] = (
             self.__parse_response_body(
-                self.__build_url("GetTydnyDny", secondId=week_id)
+                self.__build_url("GetTydnyDny", second_id=week_id)
             )
             or []
         )

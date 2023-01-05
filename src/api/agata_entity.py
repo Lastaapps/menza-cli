@@ -8,6 +8,7 @@ from typing import Any
 
 
 class DataClass:
+    """Defines toString() method for it's ancestors"""
     def __str__(self):
         return str(self.__dict__)
 
@@ -62,6 +63,7 @@ class Dish(DataClass):
 
     @staticmethod
     def __parse_allergens(allergens: str) -> list[str]:
+        """Parses allergens - many separators are supported"""
         return list(filter(lambda x: x != "", re.split(",| |;|\\.", allergens)))
 
     def __init__(self, data: dict[str, Any]):

@@ -9,4 +9,14 @@ disable=
     E1120,
     # Suppressing result unknown imports (import-error)
     E0401,
+    # Wtf they want from me, this is just stupid (too-few-public-methods)
+    R0903,
+    # This just makes no sense - data classes is the way (too-many-instance-attributes)
+    R0902,
+    # This is feature, not bug, I'm not building a library (relative-beyond-top-level)
+    E0402,
+
+[BASIC]
+
+good-names=id
 

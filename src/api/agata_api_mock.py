@@ -1,3 +1,7 @@
+# pylint: disable=R1705
+
+"""Agata api used for testing"""
+
 from .agata_api import AgataApi
 from .agata_entity import (
     Address,
@@ -13,8 +17,9 @@ from .agata_entity import (
     WeekInfo,
 )
 
-
 class AgataApiMock(AgataApi):
+    """Agata api used for testing"""
+
     def __init__(self):
         """Create api object to get data from BE"""
 
@@ -414,7 +419,7 @@ class AgataApiMock(AgataApi):
     def get_contact(self) -> list[Contact]:
         """Gets contacts to the subsystem given"""
 
-        l = [
+        listus = [
             {
                 "id": "1",
                 "podsystem_id": "1",
@@ -570,7 +575,7 @@ class AgataApiMock(AgataApi):
                 "poradi_web": "1",
             },
         ]
-        return [Contact(x) for x in l]
+        return [Contact(x) for x in listus]
 
     def get_address(self) -> list[Address]:
         """Gets address of the subsystem given"""
@@ -678,6 +683,7 @@ class AgataApiMock(AgataApi):
 
     def get_image_url(self, subsystem_id: int, name: str) -> str:
         """Gets URL of the given name"""
+        # pylint: disable=W0613
 
         return (
             "https://agata.suz.cvut.cz"

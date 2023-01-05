@@ -7,6 +7,7 @@ from typing import Any
 
 
 class DataClass:
+    """Defines common toString() method"""
     def __str__(self):
         return str(self.__dict__)
 
@@ -27,16 +28,16 @@ class Status(DataClass):
 class Rate(DataClass):
     """Rate payload"""
 
-    def __init__(self, id: str, rating: int):
-        self.id = id
+    def __init__(self, dish_id: str, rating: int):
+        self.id = dish_id
         self.rating = rating
 
 
 class Soldout(DataClass):
     """Soldout payload"""
 
-    def __init__(self, id: str):
-        self.id = id
+    def __init__(self, dish_id: str):
+        self.id = dish_id
 
 
 class Statistics(DataClass):
