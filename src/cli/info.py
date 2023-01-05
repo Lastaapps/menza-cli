@@ -8,6 +8,8 @@ from src.repo.repo import CompleteInfo, Repo
 
 from . import util
 
+# pylint: disable=R0801
+# I want to keep the cli format same even when gui format changes
 
 def print_times(info: CompleteInfo) -> None:
     """Prints opening times"""

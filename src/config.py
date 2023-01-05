@@ -1,11 +1,17 @@
+"""Loads app config from the menza.conf file"""
+
 import configparser as cp
 
 from result import Err, Ok, Result, as_result
 
-config_file = "menza.conf"
+CONFIG_FILE = "menza.conf"
 
+# pylint: disable=R0913
+# It is ok for data classes
 
 class AppConfig:
+    """Holds app config"""
+
     def __init__(
         self,
         agata_api_key: str,
@@ -24,14 +30,18 @@ class AppConfig:
 
 
 class ConfigLoader:
-    def __init__(self, file: str = config_file):
+    """Loads and parses config"""
+
+    def __init__(self, file: str = CONFIG_FILE):
         self.file = file
 
     @staticmethod
     @as_result(Exception)
     def __parse_allergens(allergens: str) -> list[str]:
+        """Parses allergens list from config"""
+
         if len(allergens) == 0:
-            return list()
+            return []
         return list(
             map(
                 lambda x: str(int(x)),
@@ -40,13 +50,16 @@ class ConfigLoader:
         )
 
     def load_config(self) -> Result[AppConfig, str]:
+        """
+        Parses configs
+        Returns Err on parsing error, uses defaults if configs are missing
+        """
+
         parser = cp.ConfigParser()
         try:
             parser.read(self.file)
         except cp.Error as error:
             return Err(str(error))
-        except:
-            pass
 
         menza = parser["DEFAULT"]
 
