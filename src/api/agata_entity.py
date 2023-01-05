@@ -83,6 +83,8 @@ class Dish(DataClass):
         self.complete += (self.side_dish_a + " ") if self.side_dish_a else ""
         self.complete += (self.side_dish_b + " ") if self.side_dish_b else ""
 
+        self.warn: bool | None = None
+
 
 # --- Menza Info --------------------------------------------------------------
 class Info(DataClass):

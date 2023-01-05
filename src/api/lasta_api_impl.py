@@ -6,13 +6,9 @@ import base64
 from .lasta_api import LastaApi
 from .lasta_entity import *
 
-# TODO move into config
-api_key: str = "menza-cli_15becd42-cbae-48b2-aa69-650d06763454"
-base_url: str = "https://lastaapps.sh.cvut.cz/menza"
-
 
 class LastaApiImpl(LastaApi):
-    def __init__(self, url: str = base_url, api_key: str = api_key):
+    def __init__(self, url: str, api_key: str):
         self.base_url = url
         self.api_key = api_key
 
@@ -25,7 +21,7 @@ class LastaApiImpl(LastaApi):
         """Performs GET request to the path given"""
 
         requests.packages.urllib3.util.connection.HAS_IPV6 = False
-        headers = {"X-Api-Key": api_key}
+        headers = {"X-Api-Key": self.api_key}
 
         r: requests.Response = requests.get(self.__build_url(path), headers=headers)
 
@@ -35,7 +31,7 @@ class LastaApiImpl(LastaApi):
         """Performs POST request to the path given, sends the data as JSON"""
 
         requests.packages.urllib3.util.connection.HAS_IPV6 = False
-        headers = {"X-Api-Key": api_key}
+        headers = {"X-Api-Key": self.api_key}
 
         r: requests.Response = requests.post(
             self.__build_url(path), json=data.__dict__, headers=headers

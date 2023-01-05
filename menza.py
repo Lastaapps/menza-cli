@@ -2,10 +2,25 @@
 # /bin/ is omitted because venv is expected
 
 from src.clickargs import app
+from src.config import ConfigLoader
+from src import di
+from result import Ok, Err
 
-if __name__ == '__main__':
+def main():
+    # Init config
+    loaded = ConfigLoader().load_config()
+    match loaded:
+        case Ok(value):
+            di.store_config(value)
+        case Err(e):
+            print(e)
+            return
+
+    # Start click
     app()
 
+if __name__ == '__main__':
+    main()
 
 # from src.api import agata_api as a
 # from src.api import lasta_api as l

@@ -13,9 +13,11 @@ class RepoImpl(Repo):
         self,
         agata_api: AgataApi,
         lasta_api: LastaApi,
+        allergens: list[int],
     ):
         self.agata_api = agata_api
         self.lasta_api = lasta_api
+        self.allergens = allergens
 
     @as_result(Exception)
     def get_menza_list(self) -> list[Subsystem]:
@@ -29,12 +31,17 @@ class RepoImpl(Repo):
             key = lambda x: x.id,
         )
 
+    def __update_warn(self, dish: Dish) -> Dish:
+        dish.warn = len(set(self.allergens) & set(dish.allergens)) != 0
+        return dish
+
     @as_result(Exception)
     def get_dish_list(self, system: Subsystem) -> dict[str, list[Dish]]:
         """Get today dish menu in a menza"""
 
         types = sorted(self.agata_api.get_dish_types(system.id), key=lambda s: s.order)
         dishes = self.agata_api.get_dishes(system.id)
+        dishes = list(map(self.__update_warn, dishes))
         out: dict[str, list[Dish]] = {}
         for t in types:
             out[t.name] = list(filter(lambda dish: dish.type == t.id, dishes))
@@ -89,7 +96,6 @@ class RepoImpl(Repo):
         self.rating_list = self.lasta_api.get_status()
 
         def ratingProvider(subsystem: Subsystem, dish: Dish) -> tuple[float, int]:
-            # TODO check if the correct params are passed
             id = self.lasta_api.dish_id(subsystem.description, dish.complete)
             return next(
                 ((x.rating, x.rate_count) for x in self.rating_list if x.id == id),

@@ -35,20 +35,20 @@ class DishView(KeyHandler):
         self.is_showing_image = False
         self.rating_view : RatingView | None = None
 
-    def __print_image(self, dish: Dish):
-        win = self.win
-        size = self.size
-        win.clear()
+    # def __print_image(self, dish: Dish):
+    #     win = self.win
+    #     size = self.size
+    #     win.clear()
 
-        res = self.repo.get_image(dish, size[1], size[0])
-        match res:
-            case Ok(value):
-                win.addstr(value)
-            case Err(e):
-                win.addstr("Loading image failed\n")
-                win.addstr(str(e))
+    #     res = self.repo.get_image(dish, size[1], size[0])
+    #     match res:
+    #         case Ok(value):
+    #             win.addstr(value)
+    #         case Err(e):
+    #             win.addstr("Loading image failed\n")
+    #             win.addstr(str(e))
 
-        win.refresh()
+    #     win.refresh()
 
     def __get_dish_by_index(self, index: int):
         i = 0
@@ -206,11 +206,13 @@ class DishView(KeyHandler):
 
         if selected and self.focused:
             win.attron(cr.A_REVERSE)
+        elif dish.warn:
+            win.attron(cr.A_DIM)
 
         win.addstr(y, 1, content)
 
-        if selected and self.focused:
-            win.attroff(cr.A_REVERSE)
+        win.attroff(cr.A_REVERSE)
+        win.attroff(cr.A_DIM)
 
     def __redraw(self) -> None:
         win = self.win

@@ -108,7 +108,7 @@ class Main:
         self.info_view = Info(info_scr)
 
         stdscr.move(size[0] - 1, 0)
-        stdscr.addstr("Developed by Lasta Apps (Petr Laštovička) in 2022. Monty Pythons are great, this Python not so much.")
+        stdscr.addstr("Developed by Lasta Apps (Petr Laštovička) in 2022. Monty Pythons are great, Python not so much.")
         github = "https://github.com/Lastaapps/menza-cli"
         stdscr.move(size[0] - 1, size[1] - 1 - len(github))
         stdscr.addstr(github)

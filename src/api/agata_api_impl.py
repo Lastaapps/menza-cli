@@ -16,18 +16,12 @@ from .agata_entity import (
 )
 from .agata_api import AgataApi
 
-# TODO move into config
-g_base_url: str = "https://agata.suz.cvut.cz"
-g_api_path: str = "/jidelnicky/JAPI/json_API.php"
-g_api_key: str = "v1XiWjvD"
-
-
 class AgataApiImpl(AgataApi):
     def __init__(
         self,
-        base_url: str = g_base_url,
-        api_path: str = g_api_path,
-        api_key: str = g_api_key,
+        base_url: str,
+        api_path: str,
+        api_key: str,
     ):
         """Create api object to get data from BE"""
 
