@@ -9,6 +9,7 @@ CONFIG_FILE = "menza.conf"
 # pylint: disable=R0913
 # It is ok for data classes
 
+
 class AppConfig:
     """Holds app config"""
 
@@ -49,17 +50,18 @@ class ConfigLoader:
             )
         )
 
-    def load_config(self) -> Result[AppConfig, str]:
+    def load_config(self, default: bool = False) -> Result[AppConfig, str]:
         """
         Parses configs
         Returns Err on parsing error, uses defaults if configs are missing
         """
 
         parser = cp.ConfigParser()
-        try:
-            parser.read(self.file)
-        except cp.Error as error:
-            return Err(str(error))
+        if not default:
+            try:
+                parser.read(self.file)
+            except cp.Error as error:
+                return Err(str(error))
 
         menza = parser["DEFAULT"]
 

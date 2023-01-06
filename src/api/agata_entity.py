@@ -16,6 +16,9 @@ class DataClass:
     def __repr__(self):
         return repr(self.__dict__)
 
+    def __eq__(self, obj: Any):
+        return isinstance(obj, DataClass) and obj.__dict__ == self.__dict__
+
 
 class DishList(DataClass):
     """TJidelnicek entity"""

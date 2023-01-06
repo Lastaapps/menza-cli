@@ -11,7 +11,6 @@ from src.gui.main import Main
 from src.repo.repo import Repo
 from src.repo.repo_impl import RepoImpl
 
-
 # pylint: disable=C0103,W0603
 # This global is valid and it is no a constant
 __config: AppConfig
