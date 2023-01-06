@@ -1,7 +1,7 @@
 """Abstraction for data flow management"""
 
 from abc import ABCMeta, abstractmethod
-from typing import Callable
+from typing import Any, Callable
 
 from result import Result
 
@@ -40,6 +40,15 @@ class CompleteInfo:
         self.times = open_times
         self.contacts = contacts
         self.addresses = addresses
+
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return repr(self.__dict__)
+
+    def __eq__(self, obj: Any):
+        return isinstance(obj, CompleteInfo) and obj.__dict__ == self.__dict__
 
 
 class Repo(metaclass=ABCMeta):
