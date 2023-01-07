@@ -1,16 +1,14 @@
 """Tests lasta api"""
 
-from src.config import AppConfig, ConfigLoader
+from src import di
 
-from .lasta_api_impl import LastaApiImpl
+from .lasta_api import LastaApi
 
 
-def get_api() -> LastaApiImpl:
+def get_api() -> LastaApi:
     """Creates an Api object with default configs"""
 
-    config: AppConfig = ConfigLoader().load_config(default=True).value
-    api = LastaApiImpl(config.lasta_url, config.lasta_api_key)
-    return api
+    return di.get_lasta_api(False)
 
 
 def test_id():
@@ -21,7 +19,7 @@ def test_id():
     assert dish_id == "yyICfxlF"
 
 
-def test_():
+def test_post_rating():
     """Tests a lasta api methods"""
 
     api = get_api()

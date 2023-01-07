@@ -6,7 +6,7 @@ from src.api.agata_api_mock import AgataApiMock
 from src.api.lasta_api import LastaApi
 from src.api.lasta_api_impl import LastaApiImpl
 from src.api.lasta_api_mock import LastaApiMock
-from src.config import AppConfig
+from src.config import AppConfig, ConfigLoader
 from src.gui.main import Main
 from src.repo.repo import Repo
 from src.repo.repo_impl import RepoImpl
@@ -25,6 +25,10 @@ def store_config(config: AppConfig) -> None:
 def get_config() -> AppConfig:
     """Gets the configs singleton"""
     return __config
+
+
+# Store default config (for tests)
+store_config(ConfigLoader.default())
 
 
 def get_agata_api(mocked: bool) -> AgataApi:

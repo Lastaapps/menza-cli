@@ -2,13 +2,7 @@
 
 from pytest import CaptureFixture
 
-from src import di
-from src.config import AppConfig, ConfigLoader
-
 from .week import command_week
-
-config: AppConfig = ConfigLoader().load_config(default=True).value
-di.store_config(config)
 
 # pylint: disable=C0301
 ANSWER = "Kocourkov\n\n2022-12-23 Fri\nPolejvka\t69 g\tŽrádlo 1\nNakládka\t\tŽrádlo 2\n\n2022-12-24 Sat\nDokrmka\t42 ks\tŽrádlo 3\nDezertér\t420 ml\tŽrádlo 4\n"

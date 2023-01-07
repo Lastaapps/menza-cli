@@ -2,13 +2,7 @@
 
 from pytest import CaptureFixture
 
-from src import di
-from src.config import AppConfig, ConfigLoader
-
 from .dish import command_dish
-
-config: AppConfig = ConfigLoader().load_config(default=True).value
-di.store_config(config)
 
 # pylint: disable=C0301
 ANSWER = "Kocourkov\n200g\tUtopenec\t42.0\t69.0\t1,2,3\n\tUtopenka\t42.0\t69.0\t1,2,4\n"

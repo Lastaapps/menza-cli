@@ -1,6 +1,6 @@
 """Tests for repo"""
 
-from result import Err, Ok
+from result import Ok
 
 from src import di
 from src.api.agata_api import Subsystem
@@ -9,25 +9,34 @@ from src.config import AppConfig, ConfigLoader
 
 from .repo import DishRatingMapper, Repo
 
-config: AppConfig = ConfigLoader().load_config(default=True).value
+config: AppConfig = ConfigLoader.default()
 config.allergens = ["1"]
 di.store_config(config)
 
 # pylint: disable=C0301
+
+# Pylint ignores decorators and abstraction again
+# pylint: disable=E1101
+
 KOCOURKOV = Subsystem({"id": 1, "popis": "Kocourkov", "otevreno": 1})
 
 
 def get_repo() -> Repo:
+    """Creates a repo instance for testing"""
     return di.get_repo(True)
 
 
 def get_dish(repo: Repo = get_repo()) -> Dish:
+    """Gets the first found dish"""
+
     dish_dict: dict[str, list[Dish]] = repo.get_dish_list(KOCOURKOV).value
     key = list(dish_dict.keys())
     return dish_dict[key[0]][0]
 
 
 def test_get_menza_list():
+    """Tests menza list"""
+
     repo = get_repo()
     res = repo.get_menza_list()
     assert isinstance(res, Ok)
@@ -38,6 +47,8 @@ def test_get_menza_list():
 
 
 def test_get_dish_list():
+    """Tests dish list"""
+
     repo = get_repo()
     res = repo.get_dish_list(KOCOURKOV)
     assert isinstance(res, Ok)
@@ -48,6 +59,8 @@ def test_get_dish_list():
 
 
 def test_get_week_menu():
+    """Tests menu"""
+
     repo = get_repo()
     res = repo.get_week_menu(KOCOURKOV)
     assert isinstance(res, Ok)
@@ -58,6 +71,8 @@ def test_get_week_menu():
 
 
 def test_get_complete_info():
+    """Tests complete info"""
+
     repo = get_repo()
     res = repo.get_complete_info(KOCOURKOV)
     assert isinstance(res, Ok)
@@ -68,6 +83,8 @@ def test_get_complete_info():
 
 
 def test_get_image_url():
+    """Tests image url"""
+
     repo = get_repo()
     dish = get_dish(repo)
     res = repo.get_image_url(dish)
@@ -78,6 +95,8 @@ def test_get_image_url():
 
 
 def test_get_rating():
+    """Tests rating"""
+
     repo = get_repo()
     dish = get_dish(repo)
 

@@ -1,18 +1,14 @@
 """Agata api impl tests"""
 
-from src.config import AppConfig, ConfigLoader
+from src import di
 
-from .agata_api_impl import AgataApiImpl
+from .agata_api import AgataApi
 
 
-def get_api() -> AgataApiImpl:
+def get_api() -> AgataApi:
     """Creates an Api object with default configs"""
 
-    config: AppConfig = ConfigLoader().load_config(default=True).value
-    api = AgataApiImpl(
-        config.agata_url_base, config.agata_url_api, config.agata_api_key
-    )
-    return api
+    return di.get_agata_api(False)
 
 
 def test_get_dish_list():

@@ -3,13 +3,9 @@
 from result import Err, Ok
 
 from src import di
-from src.config import AppConfig, ConfigLoader
 from src.repo.repo import Repo
 
 from . import util
-
-config: AppConfig = ConfigLoader().load_config(default=True).value
-di.store_config(config)
 
 
 def get_repo() -> Repo:

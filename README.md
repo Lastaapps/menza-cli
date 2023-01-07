@@ -60,11 +60,11 @@ File format is as follow:
 [DEFAULT]
 
 # if something changes in the future and project is no longer maintained
-agata_api_key=
 agata_url_base=
 agata_url_api=
-lasta_api_key=
+agata_api_key=
 lasta_url=
+lasta_api_key=
 
 # Dishes with the following allergens will be grayed out
 allergens=1,3

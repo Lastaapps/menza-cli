@@ -2,13 +2,7 @@
 
 from pytest import CaptureFixture
 
-from src import di
-from src.config import AppConfig, ConfigLoader
-
 from .info import command_info
-
-config: AppConfig = ConfigLoader().load_config(default=True).value
-di.store_config(config)
 
 # pylint: disable=C0301
 ANSWER = "Kocourkov\nHorni \n\nDolni \n\nRestaurace\nPo - Čt  11:00 - 20:00  \nPá       11:00 - 19:30  \n\nJídelna\nPo - Pá   6:30 -  9:30  Snídaně\nPo - Pá  11:00 - 14:30  Oběd\nPo - Čt  17:00 - 20:00  Večeře\nPá       17:00 - 19:30  Večeře\n\nVedoucí menzy\nmenza-strahov@cvut.cz\n+420 234 678 291\n\nProvoz\nsuz-provoznims@cvut.cz\n+420 234 678 361\n\nKocourkov 42\n50N 15E\n"
