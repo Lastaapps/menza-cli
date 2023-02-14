@@ -10,7 +10,17 @@ non-unix systems are not supported.
 Make sure your terminal supports emojis.
 
 # Install
-> TODO after the project is graded
+
+You can install the app by running [this script](install.sh).
+
+You can do that directly (if you trust me) by running this:
+```bash
+wget -O - --no-cache --no-cookies https://raw.githubusercontent.com/Lastaapps/menza-cli/main/install.sh 2&> /dev/null | sudo bash
+```
+
+Then you can run `menza`, `menza-update` and `menza-uninstall` in your terminal.
+
+It is not ideal, I know, if you know Linux packaging feel free to make a pull request.
 
 # Setup locally
 To set the project you will need Python 3.10 or greater.
