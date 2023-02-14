@@ -18,7 +18,16 @@ di.store_config(config)
 # Pylint ignores decorators and abstraction again
 # pylint: disable=E1101
 
-KOCOURKOV = Subsystem({"id": 1, "popis": "Kocourkov", "otevreno": 1})
+KOCOURKOV = Subsystem(
+    {
+        "id": 1,
+        "popis": "Kocourkov",
+        "otevreno": True,
+        "jidelnicek_denni": True,
+        "jidelnicek_tydenni": True,
+        "poradi": 1,
+    }
+)
 
 
 def get_repo() -> Repo:
@@ -42,7 +51,7 @@ def test_get_menza_list():
     assert isinstance(res, Ok)
     assert (
         str(res.value)
-        == "[{'id': 1, 'description': 'Kocourkov', 'open': True}, {'id': 2, 'description': 'Bavorov', 'open': False}]"
+        == "[{'id': 1, 'description': 'Kocourkov', 'open': True, 'daily': True, 'weekly': True, 'order': 1}, {'id': 2, 'description': 'Bavorov', 'open': False, 'daily': True, 'weekly': True, 'order': 2}]"
     )
 
 
@@ -52,9 +61,10 @@ def test_get_dish_list():
     repo = get_repo()
     res = repo.get_dish_list(KOCOURKOV)
     assert isinstance(res, Ok)
+    print(res.value)
     assert (
         str(res.value)
-        == "{'Polévka': [{'id': 1, 'subsystem_id': 1, 'date': '2022-12-24', 'dish_list_ids': ['1', '2'], 'type': 1, 'weight': '200g', 'name': 'Utopenec', 'side_dish_a': ' okurky', 'side_dish_b': ' lidi', 'price_student': 42.0, 'price_normal': 69.0, 'allergens': ['1', '2', '3'], 'photo': 'IMG-2022-12-12-142136203.JPG', 'complete': 'Utopenec okurky  lidi ', 'warn': True}], 'Specialita': [{'id': 2, 'subsystem_id': 1, 'date': '2022-12-24', 'dish_list_ids': ['1', '2'], 'type': 2, 'weight': '', 'name': 'Utopenka', 'side_dish_a': ' paprika', 'side_dish_b': ' člověci', 'price_student': 42.0, 'price_normal': 69.0, 'allergens': ['1', '2', '4'], 'photo': '', 'complete': 'Utopenka paprika  člověci ', 'warn': True}]}"
+        == "{'Polévka': [{'id': 1, 'subsystem_id': 1, 'date': '2022-12-24', 'serving_places': [1], 'type': 1, 'weight': '200g', 'name': 'Utopenec', 'side_dish_a': ' okurky', 'side_dish_b': ' lidi', 'price_student': 42.0, 'price_normal': 69.0, 'allergens': [1, 2, 3], 'photo': 'IMG-2022-12-12-142136203.JPG', 'active': True, 'complete': 'Utopenec okurky  lidi ', 'warn': False}], 'Specialita': [{'id': 2, 'subsystem_id': 1, 'date': '2022-12-24', 'serving_places': [1], 'type': 2, 'weight': '', 'name': 'Utopenka', 'side_dish_a': ' paprika', 'side_dish_b': ' člověci', 'price_student': 42.0, 'price_normal': 69.0, 'allergens': [1, 2, 4], 'photo': '', 'active': True, 'complete': 'Utopenka paprika  člověci ', 'warn': False}]}"
     )
 
 

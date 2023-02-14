@@ -22,7 +22,7 @@ def print_dish_list(repo: Repo, subsystem: Subsystem) -> None:
                         dish.name,
                         dish.price_student,
                         dish.price_normal,
-                        ",".join(dish.allergens),
+                        ",".join([str(x) for x in dish.allergens]),
                         sep="\t",
                     )
         case Err(error):

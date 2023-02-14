@@ -7,9 +7,9 @@ from .agata_entity import (
     Contact,
     DayDish,
     Dish,
-    DishList,
     DishType,
     Info,
+    News,
     OpenTime,
     ServingPlace,
     Subsystem,
@@ -19,10 +19,6 @@ from .agata_entity import (
 
 class AgataApi(metaclass=ABCMeta):
     """Parent class for agata api"""
-
-    @abstractmethod
-    def get_dish_list(self) -> list[DishList]:
-        """Returns list of dish"""
 
     @abstractmethod
     def get_sub_systems(self) -> list[Subsystem]:
@@ -43,6 +39,10 @@ class AgataApi(metaclass=ABCMeta):
     @abstractmethod
     def get_info(self, subsystem_id: int) -> list[Info]:
         """Gets info about the subsystem given"""
+
+    @abstractmethod
+    def get_news(self, subsystem_id: int) -> News:
+        """Gets news from the subsystem given"""
 
     @abstractmethod
     def get_open_times(self, subsystem_id: int) -> list[OpenTime]:

@@ -33,9 +33,9 @@ class RepoImpl(Repo):
         return sorted(
             sorted(
                 self.agata_api.get_sub_systems(),
-                key=lambda s: s.description,
+                key=lambda s: s.daily,
             ),
-            key=lambda x: x.id,
+            key=lambda x: x.order,
         )
 
     def __update_warn(self, dish: Dish) -> Dish:
@@ -100,6 +100,7 @@ class RepoImpl(Repo):
                 self.agata_api.get_info(subsystem_id),
             )
         )[0]
+        news = self.agata_api.get_news(subsystem_id)
 
         all_times = self.agata_api.get_open_times(subsystem_id)
         times = RepoImpl.__group_times(all_times).get(subsystem_id, {})
@@ -115,7 +116,7 @@ class RepoImpl(Repo):
             )
         )
 
-        return CompleteInfo(info, times, contacts, addresses)
+        return CompleteInfo(info, news, times, contacts, addresses)
 
     @as_result(Exception)
     def get_rating(self) -> DishRatingMapper:

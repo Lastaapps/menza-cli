@@ -8,9 +8,9 @@ from .agata_entity import (
     Contact,
     DayDish,
     Dish,
-    DishList,
     DishType,
     Info,
+    News,
     OpenTime,
     ServingPlace,
     Subsystem,
@@ -24,35 +24,30 @@ class AgataApiMock(AgataApi):
     def __init__(self):
         """Create api object to get data from BE"""
 
-    def get_dish_list(self) -> list[DishList]:
-        """Returns list of dish"""
-        return [
-            DishList(
-                {
-                    "id": 0,
-                    "nazev": "Studenti",
-                    "popis": "Studenti",
-                    "podsystemy": "1;2",
-                    "cena": "cena_stud",
-                }
-            ),
-            DishList(
-                {
-                    "id": 1,
-                    "nazev": "Zaměstnanci",
-                    "popis": "Zaměstnanci",
-                    "podsystemy": "1;2",
-                    "cena": "cena_ost",
-                }
-            ),
-        ]
-
     def get_sub_systems(self) -> list[Subsystem]:
         """Gets subsystems"""
 
         return [
-            Subsystem({"id": 1, "popis": "Kocourkov", "otevreno": 1}),
-            Subsystem({"id": 2, "popis": "Bavorov", "otevreno": 0}),
+            Subsystem(
+                {
+                    "id": 1,
+                    "popis": "Kocourkov",
+                    "otevreno": True,
+                    "jidelnicek_denni": True,
+                    "jidelnicek_tydenni": True,
+                    "poradi": 1,
+                }
+            ),
+            Subsystem(
+                {
+                    "id": 2,
+                    "popis": "Bavorov",
+                    "otevreno": False,
+                    "jidelnicek_denni": True,
+                    "jidelnicek_tydenni": True,
+                    "poradi": 2,
+                }
+            ),
         ]
 
     def get_serving_places(self, subsystem_id: int) -> list[ServingPlace]:
@@ -137,7 +132,7 @@ class AgataApiMock(AgataApi):
                         "id": 1,
                         "podsystem_id": 1,
                         "datum": "2022-12-24",
-                        "jidelnicek": "1;2",
+                        "vydejny": [1],
                         "kategorie": "1",
                         "vaha": "200g",
                         "nazev": "Utopenec",
@@ -145,8 +140,9 @@ class AgataApiMock(AgataApi):
                         "priloha_b": " lidi",
                         "cena_stud": "42",
                         "cena": "69",
-                        "alergeny": "1;2;3",
+                        "alergeny": [1, 2, 3],
                         "foto": "IMG-2022-12-12-142136203.JPG",
+                        "aktivni": True,
                     }
                 ),
                 Dish(
@@ -154,16 +150,17 @@ class AgataApiMock(AgataApi):
                         "id": 2,
                         "podsystem_id": 1,
                         "datum": "2022-12-24",
-                        "jidelnicek": "1;2",
-                        "kategorie": "2",
+                        "vydejny": [1],
+                        "kategorie": 2,
                         "vaha": "",
                         "nazev": "Utopenka",
                         "priloha_a": " paprika",
                         "priloha_b": " člověci",
-                        "cena_stud": "42",
-                        "cena": "69",
-                        "alergeny": "1;2;4",
+                        "cena_stud": 42,
+                        "cena": 69,
+                        "alergeny": [1, 2, 4],
                         "foto": "",
+                        "aktivni": True,
                     }
                 ),
             ]
@@ -174,16 +171,17 @@ class AgataApiMock(AgataApi):
                         "id": 1,
                         "podsystem_id": 2,
                         "datum": "2022-12-24",
-                        "jidelnicek": "1;2",
-                        "kategorie": "1",
+                        "vydejny": [2],
+                        "kategorie": 1,
                         "vaha": "200g",
                         "nazev": "Utopenec",
                         "priloha_a": " okurky",
                         "priloha_b": " lidi",
-                        "cena_stud": "42",
-                        "cena": "69",
-                        "alergeny": "1;2;3",
+                        "cena_stud": 42,
+                        "cena": 69,
+                        "alergeny": [1, 2, 3],
                         "foto": "IMG-2022-12-12-142136203.JPG",
+                        "aktivni": False,
                     }
                 ),
                 Dish(
@@ -191,16 +189,17 @@ class AgataApiMock(AgataApi):
                         "id": 2,
                         "podsystem_id": 2,
                         "datum": "2022-12-24",
-                        "jidelnicek": "1;2",
-                        "kategorie": "2",
+                        "vydejny": [2],
+                        "kategorie": 2,
                         "vaha": "",
                         "nazev": "Utopenka",
                         "priloha_a": " paprika",
                         "priloha_b": " člověci",
-                        "cena_stud": "42",
-                        "cena": "69",
-                        "alergeny": "1;2;4",
+                        "cena_stud": 42,
+                        "cena": 69,
+                        "alergeny": [1, 2, 4],
                         "foto": "",
+                        "aktivni": True,
                     }
                 ),
             ]
@@ -215,7 +214,6 @@ class AgataApiMock(AgataApi):
                         "id": 1,
                         "podsystem_id": 1,
                         "podsystem_web": "idk",
-                        "text_nahore": "Horni",
                         "text_dole": "Dolni",
                     }
                 ),
@@ -227,11 +225,18 @@ class AgataApiMock(AgataApi):
                         "id": 2,
                         "podsystem_id": 2,
                         "podsystem_web": "idk",
-                        "text_nahore": "Horni, ale jinak",
                         "text_dole": "Dolni, ale naopak",
                     }
                 ),
             ]
+
+    def get_news(self, subsystem_id: int) -> News:
+        """Gets info about the subsystem given"""
+
+        if subsystem_id == 1:
+            return News("Horni")
+        else:
+            return News("Horni, ale naopak")
 
     def get_open_times(self, subsystem_id: int) -> list[OpenTime]:
         """Gets opening times of the subsystem given"""
@@ -425,23 +430,21 @@ class AgataApiMock(AgataApi):
                 "id": "1",
                 "podsystem_id": "1",
                 "maps": "50.079174,14.393236",
-                "poradi": 0,
+                "poradi": 1,
                 "pozice": "Vedoucí menzy",
                 "jmeno": "",
                 "telefon": "234678291",
                 "email": "menza-strahov@cvut.cz",
-                "poradi_web": "1",
             },
             {
                 "id": "2",
                 "podsystem_id": "1",
                 "maps": "50.079174,14.393236",
-                "poradi": 1,
+                "poradi": 2,
                 "pozice": "Provoz",
                 "jmeno": "",
                 "telefon": "234678361",
                 "email": "suz-provoznims@cvut.cz",
-                "poradi_web": "2",
             },
             {
                 "id": "3",
@@ -641,7 +644,7 @@ class AgataApiMock(AgataApi):
                     "typstravy": 1,
                     "nazev": "Žrádlo 1",
                     "vaha": "69 g",
-                    "TypStravyNazev": "Polejvka",
+                    "typstravy_nazev": "Polejvka",
                 }
             ),
             DayDish(
@@ -653,7 +656,7 @@ class AgataApiMock(AgataApi):
                     "typstravy": 2,
                     "nazev": "Žrádlo 2",
                     "vaha": "",
-                    "TypStravyNazev": "Nakládka",
+                    "typstravy_nazev": "Nakládka",
                 }
             ),
             DayDish(
@@ -665,7 +668,7 @@ class AgataApiMock(AgataApi):
                     "typstravy": 3,
                     "nazev": "Žrádlo 3",
                     "vaha": "42 ks",
-                    "TypStravyNazev": "Dokrmka",
+                    "typstravy_nazev": "Dokrmka",
                 }
             ),
             DayDish(
@@ -677,7 +680,7 @@ class AgataApiMock(AgataApi):
                     "typstravy": 4,
                     "nazev": "Žrádlo 4",
                     "vaha": "420 ml",
-                    "TypStravyNazev": "Dezertér",
+                    "typstravy_nazev": "Dezertér",
                 }
             ),
         ]

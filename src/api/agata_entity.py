@@ -3,7 +3,6 @@ Doc available at
 https://agata-new.suz.cvut.cz/jidelnicky/JAPI/JAPI-popis.html
 """
 
-import re
 from typing import Any
 
 
@@ -20,24 +19,16 @@ class DataClass:
         return isinstance(obj, DataClass) and obj.__dict__ == self.__dict__
 
 
-class DishList(DataClass):
-    """TJidelnicek entity"""
-
-    def __init__(self, resp: dict[str, Any]):
-        self.id = int(resp["id"])
-        self.name = str(resp["nazev"])
-        self.description = str(resp["popis"])
-        self.systems = [int(x) for x in str(resp["podsystemy"]).split(";")]
-        self.price = str(resp["cena"])
-
-
 class Subsystem(DataClass):
     """TPodsystem entity"""
 
     def __init__(self, resp: dict[str, Any]):
         self.id = int(resp["id"])
         self.description = str(resp["popis"])
-        self.open = int(resp["otevreno"]) == 1
+        self.open = bool(resp["otevreno"])
+        self.daily = bool(resp["jidelnicek_denni"])
+        self.weekly = bool(resp["jidelnicek_tydenni"])
+        self.order = int(resp["poradi"])
 
 
 class ServingPlace(DataClass):
@@ -65,25 +56,21 @@ class DishType(DataClass):
 class Dish(DataClass):
     """TDish entity"""
 
-    @staticmethod
-    def __parse_allergens(allergens: str) -> list[str]:
-        """Parses allergens - many separators are supported"""
-        return list(filter(lambda x: x != "", re.split(",| |;|\\.", allergens)))
-
     def __init__(self, data: dict[str, Any]):
         self.id = int(data["id"])
         self.subsystem_id = int(data["podsystem_id"])
         self.date = str(data["datum"])
-        self.dish_list_ids = str(data["jidelnicek"]).split(";")
+        self.serving_places: list[int] = [int(x) for x in list(data["vydejny"])]
         self.type = int(data["kategorie"])
         self.weight = str(data["vaha"] or "")
         self.name = str(data["nazev"])
-        self.side_dish_a = str(data["priloha_a"])
-        self.side_dish_b = str(data["priloha_b"])
+        self.side_dish_a = str(data["priloha_a"] or "")
+        self.side_dish_b = str(data["priloha_b"] or "")
         self.price_student = float(data["cena_stud"])
         self.price_normal = float(data["cena"])
-        self.allergens = Dish.__parse_allergens(str(data["alergeny"]))
-        self.photo = str(data["foto"])
+        self.allergens: list[int] = [int(x) for x in list(data["alergeny"])]
+        self.photo = str(data["foto"] or "")
+        self.active = bool(data["aktivni"])
 
         self.complete = self.name
         self.complete += (self.side_dish_a + " ") if self.side_dish_a else ""
@@ -100,8 +87,14 @@ class Info(DataClass):
         self.id = int(data["id"] or -1)
         self.subsystem_id = int(data["podsystem_id"])
         self.subsystem_web = str(data["podsystem_web"])
-        self.header = str(data["text_nahore"]).replace("<BR>", "\n").strip()
         self.footer = str(data["text_dole"]).replace("<BR>", "\n").strip()
+
+
+class News(DataClass):
+    """TAktuality entity"""
+
+    def __init__(self, data: str):
+        self.header = data.replace("<BR>", "\n").strip()
 
 
 class OpenTime(DataClass):
@@ -129,7 +122,7 @@ class Contact(DataClass):
         self.id = int(data["id"])
         self.subsystem_id = int(data["podsystem_id"])
         self.gps = str(data["maps"])
-        self.order = int(data["poradi_web"] or 0)
+        self.order = int(data["poradi"] or 0)
         self.role = str(data["pozice"])
         self.name = str(data["jmeno"])
         self.phone = str(data["telefon"])
@@ -172,6 +165,6 @@ class DayDish(DataClass):
         self.type = int(data["typstravy"])
         self.name = str(data["nazev"])
         self.weight = str(data["vaha"] or "")
-        self.type_name = data["TypStravyNazev"]
+        self.type_name = data["typstravy_nazev"]
 
         self.day_of_week_name = days_of_week[self.day_of_week]

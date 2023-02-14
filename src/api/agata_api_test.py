@@ -11,20 +11,12 @@ def get_api() -> AgataApi:
     return di.get_agata_api(False)
 
 
-def test_get_dish_list():
-    """One of many tests"""
-
-    api = get_api()
-    res = api.get_dish_list()
-    assert len(res) == 2
-
-
 def test_get_sub_systems():
     """One of many tests"""
 
     api = get_api()
     res = api.get_sub_systems()
-    assert len(res) == 9
+    assert len(res) == 12
 
 
 def test_serving_places():
@@ -57,6 +49,13 @@ def test_info():
     api = get_api()
     res = api.get_info(1)
     assert len(res) == 1
+
+
+def test_news():
+    """One of many tests"""
+
+    api = get_api()
+    assert isinstance(api.get_news(1).header, str)
 
 
 def test_get_open_times():

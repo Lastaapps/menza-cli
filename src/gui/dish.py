@@ -240,13 +240,23 @@ class DishView(KeyHandler):
 
         # Allergens
         if self.most_allergens != 0:
-            content += ",".join(dish.allergens).rjust(self.most_allergens)
+            content += ",".join([str(x) for x in dish.allergens]).rjust(
+                self.most_allergens
+            )
             content += space
 
         if selected and self.focused:
             win.attron(cr.A_REVERSE)
         elif dish.warn:
             win.attron(cr.A_DIM)
+
+        if not dish.active:
+
+            def strike(text: str) -> str:
+                # See <https://stackoverflow.com/a/25244576/4039050>
+                return "\u0336".join(text) + "\u0336"
+
+            content = strike(content)
 
         win.addstr(y, 1, content)
 

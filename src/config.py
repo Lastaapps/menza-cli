@@ -8,7 +8,7 @@ from result import Err, Ok, Result, as_result
 CONFIG_FILE = "menza.conf"
 
 DEFAULT_AGATA_URL_BASE = "https://agata.suz.cvut.cz"
-DEFAULT_AGATA_URL_API = "/jidelnicky/JAPI/json_API.php"
+DEFAULT_AGATA_URL_API = "/jidelnicky/JAPIV2/json_API.php"
 DEFAULT_AGATA_KEY = "v1XiWjvD"
 DEFAULT_LASTA_URL = "https://lastaapps.sh.cvut.cz/menza"
 DEFAULT_LASTA_KEY = "menza-cli_15becd42-cbae-48b2-aa69-650d06763454"

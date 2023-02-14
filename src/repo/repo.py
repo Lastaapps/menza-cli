@@ -5,12 +5,15 @@ from typing import Any, Callable
 
 from result import Result
 
+# pylint: disable=R0913
+
 from src.api.agata_entity import (
     Address,
     Contact,
     DayDish,
     Dish,
     Info,
+    News,
     OpenTime,
     Subsystem,
 )
@@ -31,11 +34,12 @@ class CompleteInfo:
     def __init__(
         self,
         info: Info,
+        news: News,
         open_times: TimeServingGroup,
         contacts: list[Contact],
         addresses: list[Address],
     ):
-        self.header = info.header
+        self.header = news.header
         self.footer = info.footer
         self.times = open_times
         self.contacts = contacts

@@ -10,9 +10,9 @@ from .agata_entity import (
     Contact,
     DayDish,
     Dish,
-    DishList,
     DishType,
     Info,
+    News,
     OpenTime,
     ServingPlace,
     Subsystem,
@@ -57,14 +57,6 @@ class AgataApiImpl(AgataApi):
         response: requests.Response = requests.get(url, timeout=10)
         return response.json()
 
-    def get_dish_list(self) -> list[DishList]:
-        """Returns list of dish"""
-
-        data: list[dict[str, Any]] = self.__parse_response_body(
-            self.__build_url("GetJidelnicky")
-        )
-        return [DishList(x) for x in data]
-
     def get_sub_systems(self) -> list[Subsystem]:
         """Gets subsystems"""
 
@@ -96,8 +88,7 @@ class AgataApiImpl(AgataApi):
         """Gets dishes for today in the subsystem given"""
 
         data: list[dict[str, Any]] = (
-            self.__parse_response_body(self.__build_url("GetJidla", subsystem_id, 1))
-            or []
+            self.__parse_response_body(self.__build_url("GetJidla", subsystem_id)) or []
         )
         return [Dish(x) for x in data]
 
@@ -105,16 +96,22 @@ class AgataApiImpl(AgataApi):
         """Gets info about the subsystem given"""
 
         data: list[dict[str, Any]] = (
-            self.__parse_response_body(self.__build_url("GetInfo", subsystem_id, 1))
-            or []
+            self.__parse_response_body(self.__build_url("GetInfo", subsystem_id)) or []
         )
         return [Info(x) for x in data]
+
+    def get_news(self, subsystem_id: int) -> News:
+        data: str = (
+            self.__parse_response_body(self.__build_url("GetAktualityS", subsystem_id))
+            or ""
+        )
+        return News(data)
 
     def get_open_times(self, subsystem_id: int) -> list[OpenTime]:
         """Gets opening times of the subsystem given"""
 
         data: list[dict[str, Any]] = (
-            self.__parse_response_body(self.__build_url("GetOtDoby", subsystem_id, 1))
+            self.__parse_response_body(self.__build_url("GetOtDoby", subsystem_id))
             or []
         )
         return [OpenTime(x) for x in data]
