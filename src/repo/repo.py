@@ -84,9 +84,9 @@ class Repo(metaclass=ABCMeta):
     def get_rating(self) -> Result[DishRatingMapper, Exception]:
         """Get the current rating status"""
 
-    @abstractmethod
-    def get_image(self, dish: Dish, width: int, height: int) -> Result[str, Exception]:
-        """Gets image in ascii_art format"""
+    # @abstractmethod
+    # def get_image(self, dish: Dish, width: int, height: int) -> Result[str, Exception]:
+    #     """Gets image in ascii_art format"""
 
     @abstractmethod
     def get_image_url(self, dish: Dish) -> str | None:

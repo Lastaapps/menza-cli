@@ -1,6 +1,5 @@
 """Implementation for data flow management"""
 
-import ascii_magic
 from result import as_result
 
 from src.api.agata_api import AgataApi
@@ -133,24 +132,24 @@ class RepoImpl(Repo):
 
         return rating_provider
 
-    @as_result(Exception)
-    def get_image(self, dish: Dish, width: int, height: int) -> str:
-        """Gets image in ascii_art format"""
+    # @as_result(Exception)
+    # def get_image(self, dish: Dish, width: int, height: int) -> str:
+    #     """Gets image in ascii_art format"""
 
-        text = ascii_magic.from_url(
-            self.agata_api.get_image_url(dish.subsystem_id, dish.photo),
-            columns=width,
-            char="❚",
-        )
+    #     text = ascii_magic.from_url(
+    #         self.agata_api.get_image_url(dish.subsystem_id, dish.photo),
+    #         columns=width,
+    #         char="❚",
+    #     )
 
-        lines = text.split("\n")
-        if len(lines) >= height:
-            diff = height - len(lines)
-            return "\n".join(lines[diff // 2 : height - diff // 2])
+    #     lines = text.split("\n")
+    #     if len(lines) >= height:
+    #         diff = height - len(lines)
+    #         return "\n".join(lines[diff // 2 : height - diff // 2])
 
-        diff = len(lines) - height
-        listus = [""] * (diff // 2) + lines + [""] * (diff // 2)
-        return "\n".join(listus)
+    #     diff = len(lines) - height
+    #     listus = [""] * (diff // 2) + lines + [""] * (diff // 2)
+    #     return "\n".join(listus)
 
     def get_image_url(self, dish: Dish) -> str | None:
         """Gets image web url"""
