@@ -71,4 +71,4 @@ allergens=1,3
 ```
 
 # License
-> TODO after the project is graded
+Menza CLI is licensed under the `GNU GPL v3.0` license.
