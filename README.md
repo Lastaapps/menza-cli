@@ -11,6 +11,8 @@ Make sure your terminal supports emojis.
 
 # Install
 
+**Python 3.10 or greater required!**
+
 You can install the app by running [this script](install.sh).
 
 You can do that directly (if you trust me) by running this:

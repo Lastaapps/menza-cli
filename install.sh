@@ -43,8 +43,7 @@ if [[ ! -h /usr/bin/menza ]]; then
 fi
 
 printf "Done\n\n\n"
-
-cat README.md
+printf "Read the README at https://github.com/Lastaapps/menza-cli"
 
 exit 0
 
