@@ -40,12 +40,13 @@ class InfoView:
                 # pylint: disable=C0103
                 df = time.day_from
                 dt = time.day_to
-                tf = time.time_from.rjust(5)
-                tt = time.time_to.rjust(5)
-                day = df if df == dt or not dt else f"{df} - {dt}"
-                hour = tf if tf == tt or not tt else f"{tf} - {tt}"
+                tf = (time.time_from or "").rjust(5)
+                tt = (time.time_to or "").rjust(5)
+                day = (df if df == dt or not dt else f"{df} - {dt}") or ""
+                hour = (tf if tf == tt or not tt else f"{tf} - {tt}") or ""
+                description = time.from_desc or ""
 
-                text = f"{day.ljust(7)}  {hour.ljust(13)}  {time.from_desc}"
+                text = f"{day.ljust(7)}  {hour.ljust(13)}  {description}"
                 win.addstr(text)
                 win.addstr("\n")
             win.addstr("\n")

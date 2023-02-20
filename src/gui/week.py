@@ -105,7 +105,8 @@ class WeekView(KeyHandler):
 
         win = self.win
         win.attron(cr.A_UNDERLINE)
-        win.addstr(y, 0, label)
+        if y < self.size[0] - 1:
+            win.addstr(y, 0, label)
         win.attroff(cr.A_UNDERLINE)
 
     def __print_dish(self, y: int, dish: DayDish, selected: bool) -> None:
@@ -130,7 +131,7 @@ class WeekView(KeyHandler):
         content += space
 
         # Weight
-        content += dish.weight.rjust(5)
+        content += (dish.weight or "").rjust(5)
         content += space
 
         # Name
@@ -143,7 +144,8 @@ class WeekView(KeyHandler):
         if selected and self.focused:
             win.attron(cr.A_REVERSE)
 
-        win.addstr(y, 1, content)
+        if y < self.size[0] - 1:
+            win.addstr(y, 1, content)
 
         win.attroff(cr.A_REVERSE)
 

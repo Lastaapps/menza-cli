@@ -3,20 +3,34 @@ Doc available at
 https://agata-new.suz.cvut.cz/jidelnicky/JAPI/JAPI-popis.html
 """
 
-from typing import Any
+from typing import Any, Callable
 
 
 class DataClass:
     """Defines toString() method for it's ancestors"""
 
     def __str__(self):
-        return str(self.__dict__)
+        return mstr(self.__dict__)
 
     def __repr__(self):
         return repr(self.__dict__)
 
     def __eq__(self, obj: Any):
         return isinstance(obj, DataClass) and obj.__dict__ == self.__dict__
+
+
+def mstr(data: Any | None) -> str | None:
+    if data == None:
+        return None
+    else:
+        return str(data)
+
+def map_not_none(data: Any, block: Callable[[Any], Any]) -> Any:
+    if data == None:
+        return None
+    else:
+        return block(data)
+    
 
 
 class Subsystem(DataClass):
@@ -59,22 +73,22 @@ class Dish(DataClass):
     def __init__(self, data: dict[str, Any]):
         self.id = int(data["id"])
         self.subsystem_id = int(data["podsystem_id"])
-        self.date = str(data["datum"])
+        self.date = mstr(data["datum"])
         self.serving_places: list[int] = [int(x) for x in list(data["vydejny"])]
         self.type = int(data["kategorie"])
-        self.weight = str(data["vaha"] or "")
+        self.weight = mstr(data["vaha"] or "")
         self.name = str(data["nazev"])
-        self.side_dish_a = str(data["priloha_a"] or "")
-        self.side_dish_b = str(data["priloha_b"] or "")
+        self.side_dish_a = mstr(data["priloha_a"] or "")
+        self.side_dish_b = mstr(data["priloha_b"] or "")
         self.price_student = float(data["cena_stud"])
         self.price_normal = float(data["cena"])
         self.allergens: list[int] = [int(x) for x in list(data["alergeny"])]
-        self.photo = str(data["foto"] or "")
+        self.photo = mstr(data["foto"])
         self.active = bool(data["aktivni"])
 
         self.complete = self.name
-        self.complete += (self.side_dish_a + " ") if self.side_dish_a else ""
-        self.complete += (self.side_dish_b + " ") if self.side_dish_b else ""
+        self.complete += " " + str(self.side_dish_a or "")
+        self.complete += " " + str(self.side_dish_b or "")
 
         self.warn: bool | None = None
 
@@ -86,15 +100,15 @@ class Info(DataClass):
     def __init__(self, data: dict[str, Any]):
         self.id = int(data["id"] or -1)
         self.subsystem_id = int(data["podsystem_id"])
-        self.subsystem_web = str(data["podsystem_web"])
-        self.footer = str(data["text_dole"]).replace("<BR>", "\n").strip()
+        self.subsystem_web = mstr(data["podsystem_web"])
+        self.footer = map_not_none(data["text_dole"], lambda x: str(x).replace("<BR>", "\n").strip())
 
 
 class News(DataClass):
     """TAktuality entity"""
 
     def __init__(self, data: str):
-        self.header = data.replace("<BR>", "\n").strip()
+        self.header = map_not_none(data, lambda x: str(x).replace("<BR>", "\n").strip())
 
 
 class OpenTime(DataClass):
@@ -107,12 +121,12 @@ class OpenTime(DataClass):
         self.serving_name = str(data["vydejna_nazev"])
         self.serving_abbrev = str(data["vydejna_zkratka"])
         self.serving_order = int(data["vydejna_poradi"])
-        self.from_desc = str(data["od_popisek"])
-        self.from_order = str(data["od_poradi"])
-        self.day_from = str(data["od_den_od"])
-        self.day_to = str(data["od_den_do"])
-        self.time_from = str(data["od_cas_od"])
-        self.time_to = str(data["od_cas_do"])
+        self.from_desc = mstr(data["od_popisek"])
+        self.from_order = int(data["od_poradi"])
+        self.day_from = mstr(data["od_den_od"])
+        self.day_to = mstr(data["od_den_do"])
+        self.time_from = mstr(data["od_cas_od"])
+        self.time_to = mstr(data["od_cas_do"])
 
 
 class Contact(DataClass):
@@ -123,10 +137,10 @@ class Contact(DataClass):
         self.subsystem_id = int(data["podsystem_id"])
         self.gps = str(data["maps"])
         self.order = int(data["poradi"] or 0)
-        self.role = str(data["pozice"])
-        self.name = str(data["jmeno"])
-        self.phone = str(data["telefon"])
-        self.email = str(data["email"])
+        self.role = mstr(data["pozice"])
+        self.name = mstr(data["jmeno"])
+        self.phone = mstr(data["telefon"])
+        self.email = mstr(data["email"])
 
 
 class Address(DataClass):
@@ -164,7 +178,7 @@ class DayDish(DataClass):
         self.day_of_week = int(data["den"])
         self.type = int(data["typstravy"])
         self.name = str(data["nazev"])
-        self.weight = str(data["vaha"] or "")
-        self.type_name = data["typstravy_nazev"]
+        self.weight = mstr(data["vaha"])
+        self.type_name = str(data["typstravy_nazev"])
 
         self.day_of_week_name = days_of_week[self.day_of_week]
