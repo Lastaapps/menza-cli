@@ -23,9 +23,8 @@ echo "Working in $(pwd)"
 if [[ ! -d ./.git ]]; then
   echo Cloning
   git clone -b "${BRANCH}" -o origin https://github.com/Lastaapps/menza-cli.git .
-  chmod +x *.sh
-  chmod 755 run.sh
 
+  chmod +x *.sh
   ./setup.sh
 else
   echo Pulling
@@ -33,6 +32,8 @@ else
   git checkout "${BRANCH}"
   git reset --hard origin/"${BRANCH}"
 fi
+
+chmod 755 run.sh
 
 if [[ ! -h /usr/bin/menza ]]; then
   echo Creating symlinks
