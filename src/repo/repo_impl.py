@@ -153,7 +153,7 @@ class RepoImpl(Repo):
 
     def get_image_url(self, dish: Dish) -> str | None:
         """Gets image web url"""
-        if len(dish.photo) == 0:
+        if dish.photo == None:
             return None
         return self.agata_api.get_image_url(dish.subsystem_id, dish.photo)
 

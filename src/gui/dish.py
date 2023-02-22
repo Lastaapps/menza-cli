@@ -236,7 +236,7 @@ class DishView(KeyHandler):
         content += space
 
         # Has photo
-        content += "📷 " if dish.photo != "" else "   "
+        content += "📷 " if dish.photo != None else "   "
 
         # Allergens
         if self.most_allergens != 0:
