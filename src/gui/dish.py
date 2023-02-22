@@ -209,7 +209,7 @@ class DishView(KeyHandler):
         name_width -= COL_SPACING * 4
 
         # Weight
-        content = dish.weight.rjust(5)
+        content = (dish.weight or "").rjust(5)
         content += space
 
         # Name
