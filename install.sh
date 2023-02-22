@@ -34,6 +34,7 @@ else
 fi
 
 chmod 755 run.sh
+chmod 755 install.sh
 
 if [[ ! -h /usr/bin/menza ]]; then
   echo Creating symlinks
