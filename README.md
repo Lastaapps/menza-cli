@@ -1,36 +1,45 @@
 # Menza CLI
+[![PyPI version](https://badge.fury.io/py/menza_cli.svg)](https://badge.fury.io/py/menza_cli)
+
 Menza CLI is a command line tool written in Python (what a mistake)
 allowing not only CTU students to view CTU Canteens menus.
 Today menu, week menu, canteens info and dish rating using own rating BE
 interconnected with my Android app is supported.
 
 Because the Gui of the project is written using the ncurses library,
-non-unix systems are not supported.
+**non-unix systems are not supported**.
 
 Make sure your terminal supports emojis.
 
 # Install
 
-**Python 3.10 or greater required!**
+**Python 3.10+ required!** Check by running `python3 --version`.
 
-You can install the app by running [this script](install.sh).
+You can install the app from [pypi](https://pypi.org/project/menza-cli/).
 
-You can do that directly (if you trust me) by running this:
 ```bash
-wget -O - --no-cache --no-cookies https://raw.githubusercontent.com/Lastaapps/menza-cli/main/install.sh 2&> /dev/null | sudo bash
+# install the package
+python3 -m pip install menza_cli
+
+# If you don't have python in your PATH
+# Bash
+printf '\nexport PATH="$PATH:$HOME/.local/bin"\n\n' >> ~/.bashrc
+source ~/.bashrc
+# zsh
+printf '\nexport PATH="$PATH:$HOME/.local/bin"\n\n' >> ~/.zshrc
+source ~/.zshrc
+
+# Run the app
+menza
 ```
-
-Then you can run `menza`, `menza-update` and `menza-uninstall` in your terminal.
-
-It is not ideal, I know, if you know Linux packaging feel free to make a pull request.
 
 # Setup locally
 To set the project you will need Python 3.10 or greater.
-You can just run the `setup.sh` script or create a virtual environment yourself
+You can just run the `./scripts/setup.sh` script or create a virtual environment yourself
 from the `requirements.txt` file included.
 
 # Running
-To run the app, source the created env using `source .venv/bin/activate` and run `./menza.py --help`
+To run the app, source the created env using `source .venv/bin/activate` and run `./menza.sh --help`
 
 To use mocked data (eg. it is weekend and no dish is served), pass the `--mocked` option.
 
@@ -64,7 +73,7 @@ So to view a menu in the Strahov cafeteria, you can run any of these:
 - `./menza.py dish str`
 
 ## Config file
-You can config some basic app behavior using `menza.conf` file in the working directory. The file is not required to exist.
+You can config some basic app behavior using `menza.conf` file in the `~/.config` directory. The file is not required to exist.
 File format is as follow:
 
 ```conf
