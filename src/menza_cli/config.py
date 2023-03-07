@@ -18,7 +18,7 @@ Thank you for making the world a better place!
 DEFAULT_AGATA_URL_BASE = "https://agata.suz.cvut.cz"
 DEFAULT_AGATA_URL_API = "/jidelnicky/JAPIV2/json_API.php"
 DEFAULT_AGATA_KEY = "v1XiWjvD"
-DEFAULT_LASTA_URL = "https://lastaapps.sh.cvut.cz/menza"
+DEFAULT_LASTA_URL = "https://menza-lastaapps.sh.cvut.cz/"
 DEFAULT_LASTA_KEY = "menza-cli_15becd42-cbae-48b2-aa69-650d06763454"
 
 # pylint: disable=R0913
