@@ -3,6 +3,7 @@
 import curses as cr
 
 # import subprocess
+import logging
 import webbrowser
 from typing import TYPE_CHECKING
 
@@ -142,15 +143,16 @@ class Main:
         stdscr.move(size[0] - 1, size[1] - 1 - len(github))
         stdscr.addstr(github)
 
-    def __setup_rating(self):
+    def __setup_rating(self, menza_id: str):
         """Sets rating up"""
 
-        rating = self.repo.get_rating()
+        logging.debug("Setting up rating")
+        rating = self.repo.get_rating(menza_id)
         match rating:
             case Ok(value):
                 self.dish_view.update_rating(value)
-            case Err(_):
-                pass
+            case Err(error):
+                logging.error("Failed to obtain ratings: %s", error)
 
     def __setup_subsystems(self):
         """Loads the menza list"""
@@ -169,6 +171,8 @@ class Main:
 
     def __load_subsystem(self, subsystem: Subsystem):
         """Loads data for the subsystem given"""
+
+        self.__setup_rating(str(subsystem.id))  # may fail, not a huge problem
 
         dish_view = self.dish_view
         week_view = self.week_view
@@ -303,8 +307,6 @@ class Main:
 
         if not self.__setup_subsystems():
             return
-
-        self.__setup_rating()  # may fail, not a huge problem
 
         # handle keyboard
         self.__handle_input()

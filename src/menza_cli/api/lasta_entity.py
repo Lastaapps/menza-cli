@@ -24,32 +24,23 @@ class Status(DataClass):
 
     def __init__(self, data: dict[str, Any]):
         self.id = str(data["id"])
-        self.rate_count = int(data["rateCount"])
-        self.rating = float(data["rating"])
-        self.sold_out_count = int(data["soldOutCount"])
+        self.rating = float(data["combined"]["average"])
+        self.audience = int(data["combined"]["audience"])
 
 
 class Rate(DataClass):
     """Rate payload"""
 
-    def __init__(self, dish_id: str, rating: int):
-        self.id = dish_id
-        self.rating = rating
-
-
-class Soldout(DataClass):
-    """Soldout payload"""
-
-    def __init__(self, dish_id: str):
-        self.id = dish_id
+    def __init__(self, dish_id: str, name: str, taste: int):
+        self.dishID = dish_id
+        self.nameCs = name
+        self.taste = taste
 
 
 class Statistics(DataClass):
     """Today rating statistics"""
 
     def __init__(self, data: dict[str, Any]):
-        self.ratings = int(data["ratings"])
-        self.average = float(data["average"])
-        self.sold_out = int(data["sold_out"])
+        self.ratings = int(data["rating_requests"])
         self.state_count = int(data["state_requests"])
         self.statistics_count = int(data["statistics_requests"])

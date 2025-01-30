@@ -25,12 +25,12 @@ def mstr(data: Any | None) -> str | None:
     else:
         return str(data)
 
+
 def map_not_none(data: Any, block: Callable[[Any], Any]) -> Any:
     if data == None:
         return None
     else:
         return block(data)
-    
 
 
 class Subsystem(DataClass):
@@ -101,7 +101,9 @@ class Info(DataClass):
         self.id = int(data["id"] or -1)
         self.subsystem_id = int(data["podsystem_id"])
         self.subsystem_web = mstr(data["podsystem_web"])
-        self.footer = map_not_none(data["text_dole"], lambda x: str(x).replace("<BR>", "\n").strip())
+        self.footer = map_not_none(
+            data["text_dole"], lambda x: str(x).replace("<BR>", "\n").strip()
+        )
 
 
 class News(DataClass):

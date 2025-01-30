@@ -1,8 +1,10 @@
 """Main dish list view"""
+
 # Duplicates with week.py - I want them to have the logic separated
 # pylint: disable=R0801
 
 import curses as cr
+import os
 from typing import TYPE_CHECKING
 
 from menza_cli.api.agata_entity import Dish, Subsystem
@@ -43,7 +45,7 @@ class DishView(KeyHandler):
         self.data: dict[str, list[Dish]] = {}
         self.subsystem: Subsystem
         self.most_allergens = 0
-        self.rate_mapper: DishRatingMapper = lambda _, __: (0, 0)
+        self.rate_mapper: DishRatingMapper = lambda _: (0, 0)
         self.is_showing_image = False
         self.rating_view: RatingView | None = None
 
@@ -226,7 +228,7 @@ class DishView(KeyHandler):
         content += space
 
         # Rating
-        rating = self.rate_mapper(self.subsystem, dish)
+        rating = self.rate_mapper(dish)
         if rating[1] >= 10:
             content += f"{rating[0]:.1f}   ⭐"
         elif rating[1] > 0:

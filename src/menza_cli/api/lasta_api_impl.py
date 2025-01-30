@@ -1,13 +1,11 @@
 """Implementation of rating api"""
 
-import base64
 from typing import Any
 
 import requests
-from cryptography.hazmat.primitives import hashes
 
 from .lasta_api import LastaApi
-from .lasta_entity import Rate, Soldout, Statistics, Status
+from .lasta_entity import Rate, Statistics, Status
 
 
 class LastaApiImpl(LastaApi):
@@ -49,10 +47,15 @@ class LastaApiImpl(LastaApi):
 
         return response.json()
 
-    def get_status(self) -> list[Status]:
+    def __api_menza_id(self, menza_id: str) -> str:
+        return f"CTU_{menza_id}"
+
+    def get_status(self, menza_id: str) -> list[Status]:
         """Gets the current rating status"""
 
-        data: list[dict[str, Any]] = self.__request_get("status")
+        data: list[dict[str, Any]] = self.__request_get(
+            f"status/{self.__api_menza_id(menza_id)}"
+        )
 
         return [Status(x) for x in data]
 
@@ -63,38 +66,12 @@ class LastaApiImpl(LastaApi):
 
         return Statistics(data)
 
-    def post_rating(self, dish_id: str, rating: int) -> list[Status]:
+    def post_rating(
+        self, menza_id: str, dish_id: str, dish_name: str, rating: int
+    ) -> list[Status]:
         """Rates a dish with BE id given"""
 
-        body = Rate(dish_id, rating)
-        data = self.__request_post("rate", body)
+        body = Rate(dish_id, dish_name, rating)
+        data = self.__request_post(f"rate/{self.__api_menza_id(menza_id)}", body)
 
         return [Status(x) for x in data]
-
-    def post_sold_out(self, dish_id: str) -> list[Status]:
-        """Marks a dish with BE id given as sold out"""
-
-        body = Soldout(dish_id)
-        data = self.__request_post("sold-out", body)
-
-        return [Status(x) for x in data]
-
-    def dish_id(self, menza_name: str, dish_name: str) -> str:
-        """Creates dish id according to BE standard"""
-
-        dish_id = LastaApiImpl.__dish_id("CVUT", menza_name, dish_name)
-        # Used for id generation while debugging
-        # if "name_part" in dish_name:
-        #    raise RuntimeError("id for " + dish_name + ": " + id)
-
-        return dish_id
-
-    @staticmethod
-    def __dish_id(provider: str, menza_name: str, dish_name: str) -> str:
-        """Creates dish id according to BE standard"""
-
-        dish_id = provider + "_" + menza_name + "_" + dish_name
-        digest = hashes.Hash(hashes.SHA1())
-        digest.update(dish_id.encode("UTF-8"))
-
-        return base64.b64encode(digest.finalize()).decode("UTF-8")[:8]

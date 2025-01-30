@@ -1,5 +1,6 @@
 """Rating dialog"""
 
+import logging
 from typing import TYPE_CHECKING
 
 from menza_cli.api.agata_entity import Dish, Subsystem
@@ -11,6 +12,8 @@ if TYPE_CHECKING:
     from _curses import _CursesWindow as CW
 else:
     from typing import Any as CW
+
+from result import Ok, Err
 
 
 class RatingView(KeyHandler):
@@ -44,7 +47,13 @@ class RatingView(KeyHandler):
         win.refresh()
 
         if char in [ord(str(x)) for x in range(1, 6)]:
-            self.repo.send_rating(self.menza, self.dish, char - ord("0"))
+            res = self.repo.send_rating(str(self.menza.id), self.dish, char - ord("0"))
+            match res:
+                case Ok(_):
+                    return Nothing()
+                case Err(e):
+                    logging.error(e)
+                    return Nothing()
 
         return Nothing()
 

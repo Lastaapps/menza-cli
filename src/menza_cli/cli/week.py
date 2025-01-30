@@ -14,7 +14,7 @@ def print_dish_list(repo: Repo, subsystem: Subsystem) -> None:
     res = repo.get_week_menu(subsystem)
     match res:
         case Ok(value):
-            for (_, dish_list) in value.items():
+            for _, dish_list in value.items():
                 print()
                 print(dish_list[0].date, dish_list[0].day_of_week_name)
                 for dish in dish_list:

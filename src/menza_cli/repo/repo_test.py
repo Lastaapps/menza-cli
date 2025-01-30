@@ -107,16 +107,17 @@ def test_get_image_url():
 def test_get_rating():
     """Tests rating"""
 
+    menza_id = "cli_test"
     repo = get_repo()
     dish = get_dish(repo)
 
-    res: Ok[DishRatingMapper] = repo.get_rating()
+    res: Ok[DishRatingMapper] = repo.get_rating(menza_id)
     assert isinstance(res, Ok)
     mapper: DishRatingMapper = res.value
 
-    state1 = mapper(KOCOURKOV, dish)
-    rating_res = repo.send_rating(KOCOURKOV, dish, 3)
-    state2 = mapper(KOCOURKOV, dish)
+    state1 = mapper(dish)
+    rating_res = repo.send_rating(menza_id, dish, 3)
+    state2 = mapper(dish)
 
     assert isinstance(rating_res, Ok)
     assert state1 != state2

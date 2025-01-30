@@ -15,7 +15,7 @@ def print_dish_list(repo: Repo, subsystem: Subsystem) -> None:
     res = repo.get_dish_list(subsystem)
     match res:
         case Ok(value):
-            for (_, dish_list) in value.items():
+            for _, dish_list in value.items():
                 for dish in dish_list:
                     print(
                         dish.weight,

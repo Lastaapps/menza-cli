@@ -20,9 +20,7 @@ from menza_cli.api.agata_entity import (
 
 TimeServingGroup = dict[int, list[OpenTime]]
 TimeGroup = dict[int, TimeServingGroup]
-DishRatingMapper = Callable[
-    [Subsystem, Dish], tuple[float, int]
-]  # (rating, rating count)
+DishRatingMapper = Callable[[Dish], tuple[float, int]]  # (rating, rating count)
 
 
 class CompleteInfo:
@@ -81,7 +79,7 @@ class Repo(metaclass=ABCMeta):
         """Combines all the info about a menza"""
 
     @abstractmethod
-    def get_rating(self) -> Result[DishRatingMapper, Exception]:
+    def get_rating(self, menza_id: str) -> Result[DishRatingMapper, Exception]:
         """Get the current rating status"""
 
     # @abstractmethod
@@ -94,6 +92,6 @@ class Repo(metaclass=ABCMeta):
 
     @abstractmethod
     def send_rating(
-        self, subsystem: Subsystem, dish: Dish, rating: int
+        self, menza_id: str, dish: Dish, rating: int
     ) -> Result[None, Exception]:
         """Send rating for dish"""

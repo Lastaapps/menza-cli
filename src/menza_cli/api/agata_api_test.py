@@ -16,15 +16,15 @@ def test_get_sub_systems():
 
     api = get_api()
     res = api.get_sub_systems()
-    assert len(res) == 12
+    assert len(res) == 11
 
 
 def test_serving_places():
     """One of many tests"""
 
     api = get_api()
-    res = api.get_serving_places(1)
-    assert len(res) == 2
+    res = api.get_serving_places(2)
+    assert len(res) == 4
 
 
 def test_dish_types():
@@ -32,7 +32,7 @@ def test_dish_types():
 
     api = get_api()
     res = api.get_dish_types(1)
-    assert len(res) == 8
+    assert len(res) == 10
 
 
 def test_get_dishes():
@@ -63,7 +63,7 @@ def test_get_open_times():
 
     api = get_api()
     res = api.get_open_times(1)
-    assert len(res) == 6
+    assert len(res) == 3
 
 
 def test_contact():

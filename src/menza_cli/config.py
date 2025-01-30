@@ -1,6 +1,7 @@
 """Loads app config from the menza.conf file"""
 
 import configparser as cp
+import os
 from typing import Any
 
 from result import Err, Ok, Result, as_result
@@ -18,8 +19,9 @@ Thank you for making the world a better place!
 DEFAULT_AGATA_URL_BASE = "https://agata.suz.cvut.cz"
 DEFAULT_AGATA_URL_API = "/jidelnicky/JAPIV2/json_API.php"
 DEFAULT_AGATA_KEY = "v1XiWjvD"
-DEFAULT_LASTA_URL = "https://menza-lastaapps.sh.cvut.cz/"
+DEFAULT_LASTA_URL = "https://lastope2.sh.cvut.cz/menza"
 DEFAULT_LASTA_KEY = "menza-cli_15becd42-cbae-48b2-aa69-650d06763454"
+DEFAULT_LOGGING = os.uname()[1] == "msi" if False else False
 
 # pylint: disable=R0913
 # It is ok for data classes
@@ -36,6 +38,7 @@ class AppConfig:
         lasta_url: str,
         lasta_api_key: str,
         allergens: list[str],
+        logging: bool,
     ):
         self.agata_url_base = agata_url_base
         self.agata_url_api = agata_url_api
@@ -43,6 +46,7 @@ class AppConfig:
         self.lasta_url = lasta_url
         self.lasta_api_key = lasta_api_key
         self.allergens = allergens
+        self.logging = logging
 
     def __str__(self):
         return str(self.__dict__)
@@ -85,6 +89,7 @@ class ConfigLoader:
             DEFAULT_LASTA_URL,
             DEFAULT_LASTA_KEY,
             [],
+            DEFAULT_LOGGING,
         )
 
     def load_config(self) -> Result[AppConfig, str]:
@@ -106,6 +111,7 @@ class ConfigLoader:
         agata_api_key = menza.get("agata_api_key", DEFAULT_AGATA_KEY)
         lasta_api_url = menza.get("lasta_url", DEFAULT_LASTA_URL)
         lasta_api_key = menza.get("lasta_api_key", DEFAULT_LASTA_KEY)
+        logging = bool(menza.get("logging", str(DEFAULT_LOGGING)))
 
         allergens = ConfigLoader.__parse_allergens(menza.get("allergens", ""))
         match allergens:
@@ -122,5 +128,6 @@ class ConfigLoader:
                 lasta_api_url,
                 lasta_api_key,
                 allergens,
+                logging,
             )
         )

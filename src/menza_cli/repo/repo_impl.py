@@ -1,5 +1,6 @@
 """Implementation for data flow management"""
 
+import logging
 from result import as_result
 
 from menza_cli.api.agata_api import AgataApi
@@ -118,15 +119,19 @@ class RepoImpl(Repo):
         return CompleteInfo(info, news, times, contacts, addresses)
 
     @as_result(Exception)
-    def get_rating(self) -> DishRatingMapper:
+    def get_rating(self, menza_id: str) -> DishRatingMapper:
         """Get the current rating status"""
 
-        self.rating_list = self.lasta_api.get_status()
+        logging.debug("Getting rating")
+        self.rating_list = self.lasta_api.get_status(menza_id)
 
-        def rating_provider(subsystem: Subsystem, dish: Dish) -> tuple[float, int]:
-            dish_id = self.lasta_api.dish_id(subsystem.description, dish.complete)
+        def rating_provider(dish: Dish) -> tuple[float, int]:
             return next(
-                ((x.rating, x.rate_count) for x in self.rating_list if x.id == dish_id),
+                (
+                    (x.rating, x.audience)
+                    for x in self.rating_list
+                    if x.id == str(dish.id)
+                ),
                 (0, 0),
             )
 
@@ -158,6 +163,7 @@ class RepoImpl(Repo):
         return self.agata_api.get_image_url(dish.subsystem_id, dish.photo)
 
     @as_result(Exception)
-    def send_rating(self, subsystem: Subsystem, dish: Dish, rating: int) -> None:
-        dish_id = self.lasta_api.dish_id(subsystem.description, dish.complete)
-        self.rating_list = self.lasta_api.post_rating(dish_id, rating)
+    def send_rating(self, menza_id: str, dish: Dish, rating: int) -> None:
+        self.rating_list = self.lasta_api.post_rating(
+            menza_id, str(dish.id), dish.name, rating
+        )

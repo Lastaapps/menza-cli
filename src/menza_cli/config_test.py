@@ -47,6 +47,7 @@ def test_full():
         "lasta_url_config",
         "lasta_api_key_config",
         ["1", "3"],
+        False,
     )
     assert isinstance(config, Ok)
     assert config.value == expected

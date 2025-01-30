@@ -1,4 +1,5 @@
 """Shows week dish menu"""
+
 # Duplicates with dish.py - I want them to have the logic separated
 # pylint: disable=R0801
 
