@@ -39,7 +39,7 @@ You can just run the `./scripts/setup.sh` script or create a virtual environment
 from the `requirements.txt` file included.
 
 # Running
-To run the app, source the created env using `source .venv/bin/activate` and run `./menza.sh --help`
+To run the app, source the created env using `source .venv/bin/activate` and run `./menza --help`
 
 To use mocked data (eg. it is weekend and no dish is served), pass the `--mocked` option.
 

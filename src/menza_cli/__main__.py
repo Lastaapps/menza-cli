@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/env python3
 # /bin/ is omitted because venv is expected
 """Menza main file"""
 
@@ -26,4 +26,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

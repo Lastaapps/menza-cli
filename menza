@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-cd src
+cd src || exit
 python3 -m menza_cli
+
